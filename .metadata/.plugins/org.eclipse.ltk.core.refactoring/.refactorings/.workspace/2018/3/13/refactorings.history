@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;JavaeeSecond&apos; to &apos;J2ee2276&apos;" description="Rename resource &apos;JavaeeSecond&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/JavaeeSecond" name="J2ee2276" stamp="1522400273660" updateReferences="true"/>
+</session>

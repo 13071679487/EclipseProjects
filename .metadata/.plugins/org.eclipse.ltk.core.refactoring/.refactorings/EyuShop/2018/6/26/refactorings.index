@@ -1,0 +1,23 @@
+1529850876641	Copy compilation unit
+1529905794630	Extract local variable 'header'
+1529908057814	Copy package
+1529916451931	Copy compilation unit
+1529921296462	Copy compilation unit
+1529921368807	Copy compilation unit
+1530070098067	Extract local variable 'childCategoryList'
+1530100166195	Extract local variable 'categoryList'
+1530192539223	Extract local variable 'products'
+1530335412882	Delete element
+1530335433112	Delete element
+1530335443820	Delete element
+1530336311824	Extract local variable 'notifyList'
+1530336901628	Extract local variable 'rowCount'
+1530337267051	Extract local variable 'recordList'
+1530337783439	Extract local variable 'rowCount'
+1530337924613	Extract local variable 'record'
+1530338158836	Extract local variable 'rowCount'
+1530338304048	Extract local variable 'count'
+1530338669119	Extract local variable 'rowCount'
+1530338854659	Extract local variable 'rowCount'
+1530339238023	Extract local variable 'record'
+1530339535936	Extract local variable 'notification'

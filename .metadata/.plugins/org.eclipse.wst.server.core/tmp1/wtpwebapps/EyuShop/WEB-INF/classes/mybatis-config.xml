@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<setting name="defaultExecutorType" value="SIMPLE"/>
+		<setting name="logImpl" value="STDOUT_LOGGING"/>
+	</settings>
+	
+	<typeAliases>
+		<!-- 方式一：给单个javabean起一个别名,别名不区分大小写 -->
+		<!-- 
+		<typeAlias type="com.rifu.bean.Employee" alias="Employee"/>
+		 -->
+		<!-- 方式二：给在com.rifu.bean所有 bean起一个别名，规则为类名，别名不区分大小写 -->
+		<package name="com.rifu.pojo"/>
+		
+		<!-- 方式三：给javabean添加注解  @Alias -->
+		
+		
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<!-- 分页参数合理化，当请求页数小于1时，查询第一页，当请求页数大于总页数，查询最后一页 -->
+			<property name="reasonable" value="true"/>
+		</plugin>
+	</plugins>
+</configuration>

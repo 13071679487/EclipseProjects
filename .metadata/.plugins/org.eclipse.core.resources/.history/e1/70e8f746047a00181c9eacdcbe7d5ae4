@@ -1,0 +1,16 @@
+layui.use('element', function(){
+  var element = layui.element;
+  
+});
+
+$("#manage_category").on("click",function(){
+	$(".layui-body").empty();
+	var url=$(this).attr("url");
+	if(url==''||url==null){
+		return;
+	}
+	
+	$(".layui-body").load(url,{},function(){
+		//personal_infoCallback();
+	});
+})

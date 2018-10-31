@@ -1,0 +1,89 @@
+/**
+ * 
+ */
+package com.rifu.vo;
+
+import java.math.BigDecimal;
+
+/**
+ * @author Lifu
+ * @create 2018年6月19日 下午11:34:43
+ */
+public class OrderItemVo {
+
+	private String orderNo;
+	private Integer productId;
+	private String productName;
+	private String productImage;
+
+	private Integer quantity;
+	private String currentUnitPrice;
+	private String totalPrice;
+	private String createTime;
+
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(String productImage) {
+		this.productImage = productImage;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+
+	public String getCurrentUnitPrice() {
+		return currentUnitPrice;
+	}
+
+	public void setCurrentUnitPrice(String currentUnitPrice) {
+		this.currentUnitPrice = currentUnitPrice;
+	}
+
+	public String getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(String totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="jdbc.properties"/>
+	
+	<!-- 给com.rifu.model包下所有的类都取一个别名，别名为类名 -->
+	<typeAliases>
+		<package name="com.rifu.model"/>
+	</typeAliases>
+	
+	<!-- mybatis环境配置，一般企业里面都是有三个环境：开发环境、测试环境、正式环境 -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driverClassName}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!-- 引入映射文件 -->
+	<mappers>
+		<package name="com.rifu.mappers"/>
+	</mappers>
+</configuration>

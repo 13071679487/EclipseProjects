@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mvc.app.dao.StudentMapper">
+  <resultMap id="BaseResultMap" type="com.mvc.app.model.Student">
+    <id column="stuid" jdbcType="VARCHAR" property="stuid" />
+    <result column="sname" jdbcType="VARCHAR" property="sname" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="birth" jdbcType="VARCHAR" property="birth" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="scolid" jdbcType="VARCHAR" property="scolid" />
+    <result column="politics" jdbcType="VARCHAR" property="politics" />
+    <result column="accommodation" jdbcType="INTEGER" property="accommodation" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.mvc.app.model.Student">
+    <result column="picture" jdbcType="LONGVARBINARY" property="picture" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="WithMajorCourseMap" type="com.mvc.app.model.Student">
+    <!-- <collection property="majors" javaType="ArrayList" ofType="com.mvc.app.model.Major" 
+            column="mstuid" select="com.mvc.app.dao.MajorMapper.selectByStuid">
+	    <id column="mstuid" jdbcType="VARCHAR" property="mstuid" />
+	    <id column="courseid" jdbcType="VARCHAR" property="courseid" />
+	    <result column="score" jdbcType="DOUBLE" property="score" />	
+    </collection> -->
+     <!--collection 对关联查询到的多条记录映射到集合对象中
+            property： 将关联查询到的多条信息映射到 vo 哪个属性
+            ofType：映射到集合属性中 pojo 的类型
+        -->
+    <association property="college" javaType="com.mvc.app.model.College">
+	    <id column="colid" property="colid"></id>
+	    <result column="colname" property="colname"/>
+   </association>
+    <collection property="majors" ofType="com.mvc.app.model.Major">
+        <id column="mstuid" jdbcType="VARCHAR" property="mstuid" />
+	    <id column="mcourseid" jdbcType="VARCHAR" property="mcourseid" />
+	    <result column="score" jdbcType="DOUBLE" property="score" />
+	    <!--配置映射的关系的课程信息-->	
+	    <!-- <association property="course" javaType="com.mvc.app.model.Course">
+	       <id column="courseid" property="courseid"></id>
+	       <result column="cname" property="cname"></result>
+	       <result column="ctype" property="ctype"></result>
+	       <result column="examine" property="examine"></result>
+	       <result column="credit" property="credit"></result>		    
+	    </association> -->
+
+    </collection>
+    
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    stuid, sname, sex, birth, address, scolid, politics, accommodation, phone
+  </sql>
+  <sql id="Blob_Column_List">
+    picture
+  </sql>
+  <sql id="WithCourseMajor_Column_List">
+     s.stuid, s.sname, s.sex, s.birth, s.address, s.scolid, s.politics, s.accommodation, s.phone,
+     m.mstuid,m.mcourseid,m.score,col.colid,col.colname
+  </sql>
+  <!-- 生源地人数查询  -->
+  <select id="selectGroupByAddress" resultType="java.util.HashMap">
+      SELECT address, COUNT(*) as count FROM student GROUP BY address
+  </select>
+  <select id="selectCountBySex" resultType="java.util.HashMap">
+    SELECT col.colname,s.sex,COUNT(s.stuid) AS sexCount
+	FROM college col INNER JOIN student s
+	ON col.colid=CONVERT(s.scolid USING utf8)  COLLATE utf8_unicode_ci
+	GROUP BY col.colid,s.sex
+	ORDER BY col.colid
+  </select>
+  <!-- 性别统计课程的平均成绩 -->
+  <select id="selectAVGBySex" resultType="java.util.HashMap">
+    SELECT c.cname,s.sex,AVG(m.score) AS  sexscore
+	FROM student s INNER JOIN (course c INNER JOIN major m ON c.courseid=CONVERT(m.mcourseid USING utf8)  COLLATE utf8_unicode_ci )
+	ON s.stuid=CONVERT(m.mstuid USING utf8)  COLLATE utf8_unicode_ci 
+	GROUP BY s.sex,c.courseid
+	ORDER BY c.cname
+  </select>
+  <!-- 各院系不及格课程名单,"<"非法 -->
+  <select id="selectFail" resultType="java.util.HashMap">
+    <![CDATA[
+    SELECT col.colname,s.stuid,s.sname,c.courseid,c.cname,m.score
+	FROM college col INNER JOIN (course c INNER JOIN (student s INNER JOIN major m ON s.stuid=CONVERT(m.mstuid USING utf8)  COLLATE utf8_unicode_ci )
+	ON c.courseid=CONVERT(m.mcourseid USING utf8)  COLLATE utf8_unicode_ci)
+	ON col.colid=CONVERT(s.scolid USING utf8)  COLLATE utf8_unicode_ci 
+	WHERE (((m.score)<60))
+	]]>
+  </select>
+  <!-- 查询各院系各课程平均成绩 -->
+  <select id="selectAVGByCol" resultType="java.util.HashMap">
+    SELECT col.colname,c.cname,AVG(m.score) AS colscore
+	FROM (college col INNER JOIN student s ON col.colid=CONVERT(s.scolid USING utf8) COLLATE utf8_unicode_ci )
+	INNER JOIN (course c INNER JOIN major m ON c.courseid=CONVERT(m.mcourseid USING utf8) COLLATE utf8_unicode_ci )
+	ON s.stuid=CONVERT(m.mstuid USING utf8) COLLATE utf8_unicode_ci 
+	GROUP BY col.colname,c.cname
+  </select>
+  <select id="selectByExampleWithCourseMajor" resultMap="WithMajorCourseMap">
+      select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="WithCourseMajor_Column_List" />
+     from student s
+     left join college col
+     on s.scolid=CONVERT(col.colid USING utf8)  COLLATE utf8_unicode_ci 
+     left join major m 
+     on s.stuid=CONVERT(m.mstuid USING utf8)  COLLATE utf8_unicode_ci 
+     
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKeyWithCourseMajor" resultMap="WithMajorCourseMap">
+      select 
+    <include refid="WithCourseMajor_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from student s
+    left join major m
+    on s.stuid=CONVERT(m.mstuid USING utf8)  COLLATE utf8_unicode_ci
+    where s.stuid = #{stuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByExampleWithBLOBs" parameterType="com.mvc.app.model.StudentExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from student
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.mvc.app.model.StudentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from student
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from student
+    where stuid = #{stuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from student
+    where stuid = #{stuid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mvc.app.model.StudentExample">
+    delete from student
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mvc.app.model.Student">
+    insert into student (stuid, sname, sex, 
+      birth, address, scolid, 
+      politics, accommodation, phone, 
+      picture)
+    values (#{stuid,jdbcType=VARCHAR}, #{sname,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{birth,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{scolid,jdbcType=VARCHAR}, 
+      #{politics,jdbcType=VARCHAR}, #{accommodation,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{picture,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mvc.app.model.Student">
+    insert into student
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stuid != null">
+        stuid,
+      </if>
+      <if test="sname != null">
+        sname,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="birth != null">
+        birth,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="scolid != null">
+        scolid,
+      </if>
+      <if test="politics != null">
+        politics,
+      </if>
+      <if test="accommodation != null">
+        accommodation,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="picture != null">
+        picture,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stuid != null">
+        #{stuid,jdbcType=VARCHAR},
+      </if>
+      <if test="sname != null">
+        #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birth != null">
+        #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="scolid != null">
+        #{scolid,jdbcType=VARCHAR},
+      </if>
+      <if test="politics != null">
+        #{politics,jdbcType=VARCHAR},
+      </if>
+      <if test="accommodation != null">
+        #{accommodation,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mvc.app.model.StudentExample" resultType="java.lang.Long">
+    select count(*) from student
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update student
+    <set>
+      <if test="record.stuid != null">
+        stuid = #{record.stuid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sname != null">
+        sname = #{record.sname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null">
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birth != null">
+        birth = #{record.birth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null">
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.scolid != null">
+        scolid = #{record.scolid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.politics != null">
+        politics = #{record.politics,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accommodation != null">
+        accommodation = #{record.accommodation,jdbcType=INTEGER},
+      </if>
+      <if test="record.phone != null">
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picture != null">
+        picture = #{record.picture,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update student
+    set stuid = #{record.stuid,jdbcType=VARCHAR},
+      sname = #{record.sname,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      birth = #{record.birth,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      scolid = #{record.scolid,jdbcType=VARCHAR},
+      politics = #{record.politics,jdbcType=VARCHAR},
+      accommodation = #{record.accommodation,jdbcType=INTEGER},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      picture = #{record.picture,jdbcType=LONGVARBINARY}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update student
+    set stuid = #{record.stuid,jdbcType=VARCHAR},
+      sname = #{record.sname,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      birth = #{record.birth,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      scolid = #{record.scolid,jdbcType=VARCHAR},
+      politics = #{record.politics,jdbcType=VARCHAR},
+      accommodation = #{record.accommodation,jdbcType=INTEGER},
+      phone = #{record.phone,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mvc.app.model.Student">
+    update student
+    <set>
+      <if test="sname != null">
+        sname = #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birth != null">
+        birth = #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="scolid != null">
+        scolid = #{scolid,jdbcType=VARCHAR},
+      </if>
+      <if test="politics != null">
+        politics = #{politics,jdbcType=VARCHAR},
+      </if>
+      <if test="accommodation != null">
+        accommodation = #{accommodation,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where stuid = #{stuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mvc.app.model.Student">
+    update student
+    set sname = #{sname,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      birth = #{birth,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      scolid = #{scolid,jdbcType=VARCHAR},
+      politics = #{politics,jdbcType=VARCHAR},
+      accommodation = #{accommodation,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      picture = #{picture,jdbcType=LONGVARBINARY}
+    where stuid = #{stuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mvc.app.model.Student">
+    update student
+    set sname = #{sname,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      birth = #{birth,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      scolid = #{scolid,jdbcType=VARCHAR},
+      politics = #{politics,jdbcType=VARCHAR},
+      accommodation = #{accommodation,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR}
+    where stuid = #{stuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

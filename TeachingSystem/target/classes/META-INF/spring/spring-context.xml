@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+     xmlns:context="http://www.springframework.org/schema/context"
+     xmlns:tx="http://www.springframework.org/schema/tx" 
+     xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+     xmlns:task="http://www.springframework.org/schema/task" 
+     xmlns:cache="http://www.springframework.org/schema/cache"
+     xmlns:p="http://www.springframework.org/schema/p"
+     xmlns:aop="http://www.springframework.org/schema/aop"
+     xsi:schemaLocation="
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+     http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd	
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+     <!-- Spring的配置文件，这里主要配置和业务逻辑有关的 -->
+	<!--=================== 数据源，事务控制，xxx ================-->
+	<context:property-placeholder location="classpath:META-INF/base/*.properties"/>
+	
+     <!-- 数据源配置，使用应用内的DBCP数据库连接池 -->
+     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+       destroy-method="close"
+       p:driverClassName="${jdbc.driver}"
+       p:url="${jdbc.url}"
+       p:username="${jdbc.username}" p:password="${jdbc.password}"
+       p:maxActive="${dbcp.maxActive}"
+       p:maxIdle="${dbcp.maxIdle}">
+     </bean>
+     
+     <!--================== 配置和MyBatis的整合=============== -->
+	 <!-- spring与mybatis整合 -->
+	 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+      <!--dataSource属性指定要用到的连接池-->
+      <property name="dataSource" ref="dataSource"/> 
+      <!--configLocation属性指定mybatis的核心配置文件--> 
+      <property name="configLocation" value="classpath:META-INF/mybatis/sqlMapConfig.xml" />
+      <!-- 所有配置的mapper文件 -->
+      <property name="mapperLocations" value="classpath:META-INF/mybatis/mapper/*.xml" />
+    </bean>
+    
+    <!-- 配置Mapper扫描配置器，将mybatis接口的实现加入到ioc容器中 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!--扫描所有dao接口的实现，加入到ioc容器中 -->
+		<property name="basePackage" value="com.mvc.app.dao"></property>
+	</bean>
+	
+	<!-- ===============事务控制的配置 ================-->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!--控制住数据源  -->
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!--开启基于注解的事务，使用xml配置形式的事务（必要主要的都是使用配置式）  -->
+	<aop:config>
+		<!-- 切入点表达式 -->
+		<aop:pointcut expression="execution(* com.mvc.app.service..*(..))" id="txPoint"/>
+		<!-- 配置事务增强 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"/>
+	</aop:config>
+	
+	<!--配置事务增强，事务如何切入  -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 所有方法都是事务方法 -->
+			<tx:method name="*"/>
+			<!--以get开始的所有方法  -->
+			<tx:method name="get*" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	 <!-- 扫描有注解的文件  base-package 包路径 -->
+	 <context:annotation-config/>
+	 <context:component-scan base-package="com.mvc"/>
+</beans>

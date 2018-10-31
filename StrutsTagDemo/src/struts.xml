@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+<!-- 允许OGNL访问静态方法 -->
+<constant name="struts.ognl.allowStaticMethodAccess" value="true"></constant> 
+  <package name="manage" namespace="/" extends="struts-default">
+	
+   </package>
+
+</struts>

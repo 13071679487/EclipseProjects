@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rifu.dao.WeatherMapper">
+  <resultMap id="BaseResultMap" type="com.rifu.bean.Weather">
+    <id column="weather_cityid" jdbcType="INTEGER" property="weatherCityid" />
+    <result column="weather_cityname" jdbcType="VARCHAR" property="weatherCityname" />
+    <result column="weather_citypy" jdbcType="VARCHAR" property="weatherCitypy" />
+    <result column="weather_date" jdbcType="TIMESTAMP" property="weatherDate" />
+    <result column="weather_type" jdbcType="VARCHAR" property="weatherType" />
+    <result column="weather_desc" jdbcType="VARCHAR" property="weatherDesc" />
+    <result column="weather_hightemp" jdbcType="SMALLINT" property="weatherHightemp" />
+    <result column="weather_lowtemp" jdbcType="SMALLINT" property="weatherLowtemp" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    weather_cityid, weather_cityname, weather_citypy, weather_date, weather_type, weather_desc, 
+    weather_hightemp, weather_lowtemp
+  </sql>
+  <select id="selectByExample" parameterType="com.rifu.bean.WeatherExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_weather
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_weather
+    where weather_cityid = #{weatherCityid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_weather
+    where weather_cityid = #{weatherCityid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rifu.bean.WeatherExample">
+    delete from t_weather
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rifu.bean.Weather">
+    insert into t_weather (weather_cityid, weather_cityname, weather_citypy, 
+      weather_date, weather_type, weather_desc, 
+      weather_hightemp, weather_lowtemp)
+    values (#{weatherCityid,jdbcType=INTEGER}, #{weatherCityname,jdbcType=VARCHAR}, #{weatherCitypy,jdbcType=VARCHAR}, 
+      #{weatherDate,jdbcType=TIMESTAMP}, #{weatherType,jdbcType=VARCHAR}, #{weatherDesc,jdbcType=VARCHAR}, 
+      #{weatherHightemp,jdbcType=SMALLINT}, #{weatherLowtemp,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rifu.bean.Weather">
+    insert into t_weather
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="weatherCityid != null">
+        weather_cityid,
+      </if>
+      <if test="weatherCityname != null">
+        weather_cityname,
+      </if>
+      <if test="weatherCitypy != null">
+        weather_citypy,
+      </if>
+      <if test="weatherDate != null">
+        weather_date,
+      </if>
+      <if test="weatherType != null">
+        weather_type,
+      </if>
+      <if test="weatherDesc != null">
+        weather_desc,
+      </if>
+      <if test="weatherHightemp != null">
+        weather_hightemp,
+      </if>
+      <if test="weatherLowtemp != null">
+        weather_lowtemp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="weatherCityid != null">
+        #{weatherCityid,jdbcType=INTEGER},
+      </if>
+      <if test="weatherCityname != null">
+        #{weatherCityname,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherCitypy != null">
+        #{weatherCitypy,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherDate != null">
+        #{weatherDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="weatherType != null">
+        #{weatherType,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherDesc != null">
+        #{weatherDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherHightemp != null">
+        #{weatherHightemp,jdbcType=SMALLINT},
+      </if>
+      <if test="weatherLowtemp != null">
+        #{weatherLowtemp,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rifu.bean.WeatherExample" resultType="java.lang.Long">
+    select count(*) from t_weather
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_weather
+    <set>
+      <if test="record.weatherCityid != null">
+        weather_cityid = #{record.weatherCityid,jdbcType=INTEGER},
+      </if>
+      <if test="record.weatherCityname != null">
+        weather_cityname = #{record.weatherCityname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weatherCitypy != null">
+        weather_citypy = #{record.weatherCitypy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weatherDate != null">
+        weather_date = #{record.weatherDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.weatherType != null">
+        weather_type = #{record.weatherType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weatherDesc != null">
+        weather_desc = #{record.weatherDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weatherHightemp != null">
+        weather_hightemp = #{record.weatherHightemp,jdbcType=SMALLINT},
+      </if>
+      <if test="record.weatherLowtemp != null">
+        weather_lowtemp = #{record.weatherLowtemp,jdbcType=SMALLINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_weather
+    set weather_cityid = #{record.weatherCityid,jdbcType=INTEGER},
+      weather_cityname = #{record.weatherCityname,jdbcType=VARCHAR},
+      weather_citypy = #{record.weatherCitypy,jdbcType=VARCHAR},
+      weather_date = #{record.weatherDate,jdbcType=TIMESTAMP},
+      weather_type = #{record.weatherType,jdbcType=VARCHAR},
+      weather_desc = #{record.weatherDesc,jdbcType=VARCHAR},
+      weather_hightemp = #{record.weatherHightemp,jdbcType=SMALLINT},
+      weather_lowtemp = #{record.weatherLowtemp,jdbcType=SMALLINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rifu.bean.Weather">
+    update t_weather
+    <set>
+      <if test="weatherCityname != null">
+        weather_cityname = #{weatherCityname,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherCitypy != null">
+        weather_citypy = #{weatherCitypy,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherDate != null">
+        weather_date = #{weatherDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="weatherType != null">
+        weather_type = #{weatherType,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherDesc != null">
+        weather_desc = #{weatherDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherHightemp != null">
+        weather_hightemp = #{weatherHightemp,jdbcType=SMALLINT},
+      </if>
+      <if test="weatherLowtemp != null">
+        weather_lowtemp = #{weatherLowtemp,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where weather_cityid = #{weatherCityid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rifu.bean.Weather">
+    update t_weather
+    set weather_cityname = #{weatherCityname,jdbcType=VARCHAR},
+      weather_citypy = #{weatherCitypy,jdbcType=VARCHAR},
+      weather_date = #{weatherDate,jdbcType=TIMESTAMP},
+      weather_type = #{weatherType,jdbcType=VARCHAR},
+      weather_desc = #{weatherDesc,jdbcType=VARCHAR},
+      weather_hightemp = #{weatherHightemp,jdbcType=SMALLINT},
+      weather_lowtemp = #{weatherLowtemp,jdbcType=SMALLINT}
+    where weather_cityid = #{weatherCityid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,10 @@
+1525088819549	Copy compilation unit
+1525089034270	Extract local variable 'query'
+1525089561145	Extract local variable 'mixQueryBuilder'
+1525095982449	Copy compilation unit
+1525096525829	Extract local variable 'analyzer'
+1525096630192	Extract local variable 'analyzer'
+1525096653841	Extract local variable 'queryParser'
+1525096784140	Extract local variable 'query'
+1525098475895	Extract local variable 'simpleHTMLFormatter'
+1525099098185	Extract local variable 'content'

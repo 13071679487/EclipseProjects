@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 这里的声明相当于new了一个对象，且该对象默认是单例模式 -->
+	<bean id="user1" class="com.rifu.model.User">
+	<!-- 属性注入 -->
+		<property name="id" value="1"></property>
+		<property name="name" value="rifu"></property>
+		<property name="age" value="22"></property>
+	</bean>
+	
+	<bean id="dog1" class="com.rifu.model.Dog">
+		<property name="name" value="Jack"></property>
+	</bean>
+	
+	<bean id="user2" class="com.rifu.model.User">
+		<property name="id" value="1"></property>
+		<property name="name" value="rifu"></property>
+		<property name="age" value="22"></property>
+		<property name="dog" ref="dog1"></property>
+	</bean>
+	
+	<bean id="user3" class="com.rifu.model.User">
+		<property name="id" value="1"></property>
+		<property name="name" value="rifu"></property>
+		<property name="age" value="22"></property>
+		<property name="dog" >
+			<bean class="com.rifu.model.Dog">
+				<property name="name" value="第二只狗"></property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="user4" class="com.rifu.model.User">
+		<property name="id" value="1"></property>
+		<property name="name" value="rifu"></property>
+		<property name="age" value="22"></property>
+		<property name="dog" >
+			<null></null>
+		</property>
+	</bean>
+	
+	<bean id="user5" class="com.rifu.model.User">
+		<property name="id" value="1"></property>
+		<property name="name" value="rifu"></property>
+		<property name="age" value="22"></property>
+		<property name="dog" ref="dog1"></property>
+		<property name="hobbies">
+			<list>
+			<value>唱歌</value>
+			<value>跳舞</value>
+			</list>
+		</property>
+		
+		<property name="likes">
+			<set>
+			<value>唱歌1</value>
+			<value>跳舞1</value>
+			</set>
+		</property>
+		
+		<property name="loves">
+			<map>
+				<entry>
+					<key><value>loves1</value></key>
+					<value>唱歌2</value>
+				</entry>
+				<entry>
+					<key><value>loves2</value></key>
+					<value>跳舞2</value>
+				</entry>
+			</map>
+		</property>
+		
+		<property name="insteres">
+			<props>
+				<prop key="insteres1">唱歌3</prop>
+				<prop key="insteres2">跳舞3</prop>
+			</props>
+		</property>
+	</bean>
+	
+</beans>

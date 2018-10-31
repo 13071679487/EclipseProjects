@@ -1,0 +1,20 @@
+1538197916542	Delete elements
+1538197927216	Delete element
+1538198173899	Delete element
+1538198186284	Delete element
+1538198198518	Delete element
+1538198615581	Rename type 'IRepertoryRecord'
+1538198932172	Extract local variable 'repertoryRecordList'
+1538198952395	Extract local variable 'pageInfo'
+1538199287657	Extract local variable 'vo'
+1538199395848	Delete element
+1538199410555	Delete element
+1538199429499	Delete element
+1538199692437	Extract local variable 'product'
+1538200517147	Extract local variable 'rowCount'
+1538200569480	Extract local variable 'product'
+1538202328357	Extract local variable 'product'
+1538203334988	Extract local variable 'tmpProduct'
+1538205381595	Rename type 'IRepertoryRecordService'
+1538205669896	Extract local variable 'resp'
+1538205747037	Extract local variable 'currentUser'

@@ -1,0 +1,51 @@
+.layui-fluid{
+	padding:0;
+}
+
+.input-radius-20px{
+	border-radius:20px;
+}
+.input-search{
+	border:3px solid #009688;
+	border-radius:25px;
+}
+.logo{
+	font-size:25px;
+	font-weight:700;
+	text-decoration:none;
+}
+.product-main-image{
+	height:120px;
+	width:100px;
+}
+
+#page_nav{
+	background-color:rgba(220,220,220,.8);
+	padding:5px;
+}
+
+#page_nav ul{
+	list-style:none;
+}
+#page_nav ul li{
+	list-style:none;
+	display:inline;
+	padding:2px;
+	color:rgba(60,60,60,.7);
+}
+
+#navigation_nums ul{
+	display:inline;
+	list-style:none;
+}
+#navigation_nums ul li{
+	list-style:none;
+	display:inline;
+	padding:2px;
+}
+
+#page_nav ul li i{
+	font-size:18px;
+	color:rgba(220,220,220,.8);
+}
+

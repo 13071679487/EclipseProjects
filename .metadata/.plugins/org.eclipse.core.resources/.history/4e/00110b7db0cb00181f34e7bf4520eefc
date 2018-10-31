@@ -1,0 +1,63 @@
+/**
+ * 
+ */
+package com.rifu.vo;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * @author Lifu
+ * @create 2018年6月19日 下午3:27:32
+ */
+public class CartVo {
+
+	private List<CartProductVo> cartProductList;
+	private String cartTotalPrice;
+	private Integer totalQuantity;
+	private boolean allChecked;
+	private String imageHost;
+
+	public List<CartProductVo> getCartProductList() {
+		return cartProductList;
+	}
+
+	public void setCartProductList(List<CartProductVo> cartProductList) {
+		this.cartProductList = cartProductList;
+	}
+
+	
+
+	public String getCartTotalPrice() {
+		return cartTotalPrice;
+	}
+
+	public void setCartTotalPrice(String cartTotalPrice) {
+		this.cartTotalPrice = cartTotalPrice;
+	}
+
+	public Integer getTotalQuantity() {
+		return totalQuantity;
+	}
+
+	public void setTotalQuantity(Integer totalQuantity) {
+		this.totalQuantity = totalQuantity;
+	}
+
+	public boolean isAllChecked() {
+		return allChecked;
+	}
+
+	public void setAllChecked(boolean allChecked) {
+		this.allChecked = allChecked;
+	}
+
+	public String getImageHost() {
+		return imageHost;
+	}
+
+	public void setImageHost(String imageHost) {
+		this.imageHost = imageHost;
+	}
+
+}

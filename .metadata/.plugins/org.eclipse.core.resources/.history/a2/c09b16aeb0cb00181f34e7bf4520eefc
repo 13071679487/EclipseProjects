@@ -1,0 +1,38 @@
+/**
+ * 
+ */
+package com.rifu.vo;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * @author Lifu
+ * @create 2018年6月20日   下午12:46:03
+ */
+public class OrderProductVo {
+
+	private List<OrderItemVo> orderItemVoList;
+	private String productTotalPrice;
+	private String imageHost;
+	public List<OrderItemVo> getOrderItemVoList() {
+		return orderItemVoList;
+	}
+	public void setOrderItemVoList(List<OrderItemVo> orderItemVoList) {
+		this.orderItemVoList = orderItemVoList;
+	}
+	
+	public String getProductTotalPrice() {
+		return productTotalPrice;
+	}
+	public void setProductTotalPrice(String productTotalPrice) {
+		this.productTotalPrice = productTotalPrice;
+	}
+	public String getImageHost() {
+		return imageHost;
+	}
+	public void setImageHost(String imageHost) {
+		this.imageHost = imageHost;
+	}
+	
+}

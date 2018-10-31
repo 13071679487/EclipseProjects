@@ -1,0 +1,312 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>邑人邑语</title>
+
+<%
+	pageContext.setAttribute("path", request.getContextPath());
+%>
+<script type="text/javascript"
+	src="${path}/bootstrap3/js/jquery-1.11.2.min.js"></script>
+<!-- 引入js文件 -->
+<script
+	src="${path }/bootstrap3/js/bootstrap.min.js"></script>
+<!-- 引入样式 -->
+<link href="${path}/bootstrap3/css/bootstrap.min.css"
+	rel="stylesheet">
+	
+<style type="text/css">
+.photoItem{
+	float:left;
+	height:150px;
+	width:100px;
+	margin:3px;
+	border-radius:10px;
+}
+.icon{
+	width:15px;
+	height:15px;
+}
+.bg{
+	background-color:white;
+}
+</style>
+</head>
+<jsp:include page="header.jsp" ></jsp:include>
+<body>
+
+<div class="container-fluid" style="padding:0 5%">
+	<div class="row">
+		<div class="jumbotron col-md-12">
+		  <h1>Welcome, visitor!</h1>
+		  <p>...</p>
+		  <p><a class="btn btn-primary btn-lg" href="#" role="button">Login</a></p>
+		</div>
+		
+	</div>
+	<div class="row">
+		<div class="col-md-10 bg">
+			<ul class="nav nav-tabs" id="pagenav">
+			  <li id="to_home" role="presentation" class="active"><a >首页 </a></li>
+			  <li id="to_nearby" role="presentation" ><a >附近动态 </a></li>
+			  <li id="to_treehole" role="presentation" ><a >树洞 </a></li>
+			  <li id="refresh_dynamic_body" role="presentation" style="float:right;padding-top:5px;"><button class="btn btn-sm btn-success">刷新&nbsp;<span class="glyphicon glyphicon-repeat"></span> </button></li>
+			</ul>
+			
+			<div id="dynamic_body" class="container-fluid" style="padding-top:5px;">
+			<!-- 这里是中间内容显示的控件 -->
+			</div>
+		</div>
+		<div class="col-md-2 bg">
+			<h3>最新发布</h3>
+			<ul class="list-group">
+			  <li class="list-group-item">Cras justo odio</li>
+			  <li class="list-group-item">Dapibus ac facilisis in</li>
+			  <li class="list-group-item">Morbi leo risus</li>
+			  <li class="list-group-item">Porta ac consectetur ac</li>
+			  <li class="list-group-item">Vestibulum at eros</li>
+			</ul>
+			<br><br>
+			<h3>好友动态</h3>
+			<ul class="list-group">
+			  <li class="list-group-item">Cras justo odio</li>
+			  <li class="list-group-item">Dapibus ac facilisis in</li>
+			  <li class="list-group-item">Morbi leo risus</li>
+			  <li class="list-group-item">Porta ac consectetur ac</li>
+			  <li class="list-group-item">Vestibulum at eros</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+
+</body>
+<jsp:include page="footer.jsp"></jsp:include>
+
+<script type="text/javascript">
+var currentUser="${currentUser}";
+var currentTab=1;
+var dynamicList,nearbyList,treeholeList;
+
+$(function(){
+	initUserAssociate();
+	loadDynamicList();
+})
+
+function initUserAssociate(){
+	if(currentUser!=null&&currentUser!=''){
+		//已登录用户
+		console.log("has login...");
+		var userHeadiconEle=$("<img></img>").addClass("img-circle")
+							.prop({"style":"width:25px;height:25px","src":"${path}/user/icon/126"});
+		var userNameEle=$("<span></span>").append("&nbsp;用户姓名&nbsp;&nbsp;");
+		var userDynamicEle=$("<button></button>").prop("type","button").addClass("btn btn-link").append("发表了新动态");
+		var dynamiContentEle=$("<div></div>").append(userHeadiconEle)
+								.append(userNameEle)
+								.append(userDynamicEle);
+		var dynamicLi=$("<li></li>").addClass("list-group-item").append(dynamiContentEle);
+		$("#follow_dynamic").append(dynamicLi);
+	}else{
+		//未登录用户
+		console.log("no login...");
+		var tipLi=$("<li></li>").addClass("list-group-item").append("尚未登录！！！");
+		$("#follow_dynamic").append(tipLi);
+	}
+}
+
+/**
+ * 隐藏其他的刷新图标
+ */
+function refreshStatus(parent){
+	$.each($("#pagenav li"),function(index,ele){
+		$(ele).removeClass("active");
+	})
+	$(parent).addClass("active");
+}
+
+/**
+ * 点击了去首页
+ */
+$("#to_home").on("click",function(){
+	currentTab=1;
+	refreshStatus(this);
+	if(dynamicList==null||dynamicList==''){
+		loadDynamicList();
+	}else{
+		$("#dynamic_body").empty();
+		$("#dynamic_body").append(dynamicList);
+	}
+})
+
+/**
+ * 点击了去附近
+ */
+$("#to_nearby").on("click",function(){
+	currentTab=2;
+	refreshStatus(this);
+	loadNearbyList();
+})
+
+/**
+ * 点击了去树洞
+ */
+$("#to_treehole").on("click",function(){
+	currentTab=3;
+	refreshStatus(this);
+	loadTreeholeList();
+})
+
+/**
+ * 点击了刷新
+ */
+$("#refresh_dynamic_body").on("click",function(){
+	switch(currentTab){
+		case 1:
+			loadDynamicList();
+			break;
+		case 2:
+			loadNearbyList();
+			break;
+		case 3:
+			loadTreeholeList();
+			break;
+	}
+})
+
+/**
+ * 加载首页的动态
+ */
+function loadDynamicList(){
+	$("#dynamic_body").empty();
+	$.ajax({
+		url:"${path}/dynamics",
+		type:"POST",
+		data:{"pn":"1","size":"8"},
+		success:function(result){
+			if(result.code==100){
+				console.log("请求数据成功"+new Date());
+				var list=result.extend.pageInfo.list;
+				buildDynamicInfo(list);
+			}else{
+				console.log("请求数据失败"+new Date());
+			}
+		},
+		error:function(){
+			console.log("请求数据失败"+new Date());
+		}
+	})
+}
+
+/**
+ * 加载附近有关的动态
+ */
+function loadNearbyList(){
+	$("#dynamic_body").empty();
+}
+
+/**
+ * 加载树洞里面的消息
+ */
+function loadTreeholeList(){
+	$("#dynamic_body").empty();
+}
+
+function buildDynamicInfo(list){
+	$.each(list,function(index,item){
+		var hrEle=$("<hr>").prop({"style":"border:2px solid #ccc;border-radius:5px;"});
+		
+		var userHeadiconEle=$("<img></img>").addClass("img-circle").prop({"style":"height:35px;width:35px;","src":"${path}/user/icon/"+item.dynamicAuthorid});
+		var userNameEle=$("<span></span>").prop({"style":"color:gray;font-size:16px;margin-left:3px;"})
+							.append(item.author.userName);
+		var userHrefEle=$("<a></a>").prop({"href":"${path}/dispatcher/personal/"+item.dynamicAuthorid})
+							.addClass("btn btn-link")
+							.append(userHeadiconEle)
+							.append(userNameEle);
+		var createTimeEle=$("<span></span>").prop({"style":"color:gray;font-size:12px;margin-left:10px;"})
+							.append(formatDate(item.dynamicCreatetime));
+		var followEle=$("<button></button>").prop({"type":"button","style":"float: right !important;margin-right: 10px;"})
+						.addClass("btn").append("+&nbsp;关注");
+		var userInfoRow=$("<div></div>").addClass("row")
+							.append(userHrefEle)
+							.append(createTimeEle)
+							.append(followEle);
+		
+		var titleEle=$("<h4></h4>").append(item.dynamicTitle);
+		var titleRow=$("<div></div>").prop({"style":"margin-left:10px;margin-top:5px;"})
+						.addClass("row")
+						.append(titleEle);
+		
+		var contentEle=$("<p></p>").append(item.dynamicContent);
+		var contentRow=$("<div></div>").prop({"style":"margin-left:10px;"})
+						.addClass("row")
+						.append(contentEle);
+		
+		var photoRow=$("<div></div>").prop({"style":"padding:0 40px;"})
+						.addClass("row");
+						
+		console.log(item.photos);
+		$.each(item.photos,function(i,photo){
+			var photoEle=$("<img></img>").prop({"src":photo.photoData}).addClass("photoItem");
+			photoRow.append(photoEle);
+		});
+		
+		var hrSperatorEle=$("<hr></hr>").prop({"style":"height:1px;border:none;border-top:1px solid #aaa;"});
+		
+		var pageviewEle=$("<a></a>").attr("role","button")
+						.prop({"style":"color:gray;float: right !important;margin-right: 10px;"})
+						.addClass("btn")
+						.append($("<img></img>").addClass("icon").prop({"src":"https://cdn-img.easyicon.net/png/11954/1195462.gif"}))
+						.append("点赞");
+		var likeEle=$("<a></a>").attr("role","button")
+					.prop({"style":"color:gray;float: right !important;margin-right: 10px;"})
+					.addClass("btn")
+					.append($("<img></img>").addClass("icon").prop({"src":"https://cdn-img.easyicon.net/png/11982/1198247.gif"}))
+					.append(item.dynamicPageview);
+		var toolRow=$("<div></div>").prop({}).addClass("row")
+						.append(pageviewEle)
+						.append(likeEle);
+		
+		
+		var containerEle=$("<div></div>").addClass("container-fluid")
+							.append(userInfoRow)
+							.append(titleRow)
+							.append(contentRow)
+							.append(photoRow)
+							.append(hrSperatorEle)
+							.append(toolRow);
+		
+		var rowEle=$("<div></div>").addClass("row")
+					.append(containerEle)
+					.append(hrEle);
+		$("#dynamic_body").append(rowEle);
+	})
+	dynamicList=$("#dynamic_body").html();
+}
+
+/**
+ * 日期格式转换
+ */
+function formatDate(time){
+	var date=new Date(time);
+	var year=date.getFullYear();
+	var month=date.getMonth()+1;
+	var day=date.getDate();
+	var hour=date.getHours();
+	var minute=date.getMinutes();
+	return year+"-"+month+"-"+day+" "+decorateTime(hour)+":"+decorateTime(minute);
+}
+
+/**
+ * 分钟和秒钟进行补0
+ */
+function decorateTime(num){
+	if(num<10){
+		num='0'+num;
+	}
+	return num;
+}
+</script>	
+</html>

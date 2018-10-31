@@ -1,0 +1,15 @@
+1520257331567	Delete elements
+1520257607204	Rename resource 'User.hbm.xml'
+1520257836513	Copy file
+1520257924128	Rename type 'UserTest'
+1520259413623	Extract local variable 'student'
+1520259575309	Extract local variable 'courses'
+1520259591369	Extract local variable 'it'
+1520259616594	Extract local variable 'course'
+1520259943248	Copy elements
+1520260264562	Copy compilation unit
+1520260862301	Extract local variable 'student'
+1520297403685	Rename type 'Student'
+1520297412006	Rename type 'Course'
+1520297438981	Rename resource 'Course.hbm.xml'
+1520297449663	Rename resource 'Student.hbm.xml'

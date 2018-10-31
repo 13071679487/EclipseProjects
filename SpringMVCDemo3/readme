@@ -1,0 +1,7 @@
+Restful 风格的资源 URL
+
+主要是在web.xml中配置拦截的为所有
+<servlet-mapping>
+	<servlet-name>springmvc</servlet-name>
+	<url-pattern>/</url-pattern>
+</servlet-mapping>

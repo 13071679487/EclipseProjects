@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rifu.dao.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.rifu.pojo.Product">
+    <id column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="subtitle" jdbcType="VARCHAR" property="subtitle" />
+    <result column="foreground" jdbcType="VARCHAR" property="foreground" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="product_status" jdbcType="INTEGER" property="productStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="business_id" jdbcType="INTEGER" property="businessId" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.rifu.pojo.ProductWithBLOBs">
+    <result column="subImages" jdbcType="LONGVARCHAR" property="subimages" />
+    <result column="detail" jdbcType="LONGVARCHAR" property="detail" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    product_id, category_id, product_name, subtitle, foreground, price, stock, product_status, 
+    create_time, update_time, business_id
+  </sql>
+  <sql id="Blob_Column_List">
+    subImages, detail
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rifu.pojo.ProductWithBLOBs" useGeneratedKeys="true" keyProperty="product_id">
+    insert into t_product (product_id, category_id, product_name, 
+      subtitle, foreground, price, 
+      stock, product_status, create_time, 
+      update_time, business_id, subImages, 
+      detail)
+    values (#{productId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, 
+      #{subtitle,jdbcType=VARCHAR}, #{foreground,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{stock,jdbcType=INTEGER}, #{productStatus,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{businessId,jdbcType=INTEGER}, #{subimages,jdbcType=LONGVARCHAR}, 
+      #{detail,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rifu.pojo.ProductWithBLOBs">
+    insert into t_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="subtitle != null">
+        subtitle,
+      </if>
+      <if test="foreground != null">
+        foreground,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="stock != null">
+        stock,
+      </if>
+      <if test="productStatus != null">
+        product_status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="businessId != null">
+        business_id,
+      </if>
+      <if test="subimages != null">
+        subImages,
+      </if>
+      <if test="detail != null">
+        detail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="subtitle != null">
+        #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="foreground != null">
+        #{foreground,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null">
+        #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="productStatus != null">
+        #{productStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessId != null">
+        #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="subimages != null">
+        #{subimages,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="detail != null">
+        #{detail,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rifu.pojo.ProductWithBLOBs">
+    update t_product
+    <set>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="subtitle != null">
+        subtitle = #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="foreground != null">
+        foreground = #{foreground,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null">
+        stock = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="productStatus != null">
+        product_status = #{productStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessId != null">
+        business_id = #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="subimages != null">
+        subImages = #{subimages,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="detail != null">
+        detail = #{detail,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.rifu.pojo.ProductWithBLOBs">
+    update t_product
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      product_name = #{productName,jdbcType=VARCHAR},
+      subtitle = #{subtitle,jdbcType=VARCHAR},
+      foreground = #{foreground,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      stock = #{stock,jdbcType=INTEGER},
+      product_status = #{productStatus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      business_id = #{businessId,jdbcType=INTEGER},
+      subImages = #{subimages,jdbcType=LONGVARCHAR},
+      detail = #{detail,jdbcType=LONGVARCHAR}
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rifu.pojo.Product">
+    update t_product
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      product_name = #{productName,jdbcType=VARCHAR},
+      subtitle = #{subtitle,jdbcType=VARCHAR},
+      foreground = #{foreground,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      stock = #{stock,jdbcType=INTEGER},
+      product_status = #{productStatus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      business_id = #{businessId,jdbcType=INTEGER}
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByPrimaryKeyAndUid" parameterType="map" resultMap="ResultMapWithBLOBs">
+  select 
+  <include refid="Base_Column_List"></include>
+  ,
+  <include refid="Blob_Column_List"></include>
+  from t_product
+  where product_id = #{productId,jdbcType=INTEGER}
+  and business_id = #{businessId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByKeyAndCategorys" parameterType="map" resultMap="BaseResultMap">
+ 	 select 
+    <include refid="Base_Column_List" />
+    from t_product
+    <where>
+  	product_status = 1
+	  <if test="key != null and '' != key">
+		and product_name like #{key}
+	</if>
+	<if test="cids != null and cids.size() > 0">
+		and category_id in
+		<foreach item="cid" index="index" open="(" separator="," close=")" collection="cids">
+			#{cid}
+		</foreach>
+	</if>
+	<if test="low != null">
+		and price > #{low}
+	</if>
+	<if test="high !=null">
+		and #{high} > price
+	</if>
+    </where>
+  </select>
+  
+  <select id="selectByKeyAndCategorysBackend" parameterType="map" resultMap="BaseResultMap">
+  select 
+    <include refid="Base_Column_List" />
+    from t_product
+  <where>
+  <if test="key != null and '' != key ">
+		and product_name like #{key}
+	</if>
+	<if test="cids != null  and cids.size() > 0">
+		and category_id in
+		<foreach item="cid" index="index" open="(" separator="," close=")" collection="cids">
+			#{cid}
+		</foreach>
+	</if>
+  </where>
+  </select>
+  
+  <update id="updateProductStock" parameterType="com.rifu.pojo.Product">
+  	update t_product
+  	set stock = #{stock}
+  	where product_id=#{productId}
+  </update>
+</mapper>

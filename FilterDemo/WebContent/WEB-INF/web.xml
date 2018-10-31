@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>FilterDemo</display-name>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <context-param>
+  	<param-name>encoding</param-name>
+  	<param-value>UTF-8</param-value>
+  </context-param>
+  
+  
+    <!-- 用户信息放入到 session 中的键的名字 -->
+  <context-param>
+  	<param-name>userSessionKey</param-name>
+  	<param-value>USERSESSIONKEY</param-value>
+  </context-param>
+  
+  <!-- 若未登录, 需重定向的页面 -->
+  <context-param>
+  	<param-name>rediretPage</param-name>
+  	<param-value>/login/login.jsp</param-value>
+  </context-param>
+  
+  <!-- 不需要拦截(或检查)的 URL 列表 -->
+  <context-param>
+  	<param-name>uncheckedUrls</param-name>
+  	<param-value>/login/a.jsp,/login/list.jsp,/login/login.jsp,/login/doLogin.jsp</param-value>
+  </context-param>
+  
+  <!-- 
+  <filter>
+  	<filter-name>firstFilter</filter-name>
+  	<filter-class>com.rifu.FirstFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+  	<filter-name>firstFilter</filter-name>
+  	<url-pattern>/second.jsp</url-pattern>
+  </filter-mapping>
+   -->
+</web-app>

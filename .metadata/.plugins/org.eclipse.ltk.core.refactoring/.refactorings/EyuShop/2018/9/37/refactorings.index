@@ -1,0 +1,8 @@
+1536583668644	Delete element
+1536980824945	Rename method 'getOrderList'
+1536984486874	Extract local variable 'order'
+1536984676918	Extract local variable 'orderForUpdate'
+1536984785999	Extract local variable 'count'
+1536985422941	Extract local variable 'order'
+1536985473855	Extract local variable 'orderVo'
+1536985875764	Extract local variable 'resp'

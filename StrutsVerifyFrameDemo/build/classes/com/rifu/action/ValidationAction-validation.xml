@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 下面这行代码是验证文件的标志 -->
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+
+	<!-- 普通字段验证 -->
+    <field name="name">
+        <field-validator type="requiredstring">
+            <message>请输入用户名</message>
+        </field-validator>
+         <field-validator type="sensitiveword">
+            <message>含有敏感词汇</message>
+        </field-validator>
+    </field>
+   
+</validators>

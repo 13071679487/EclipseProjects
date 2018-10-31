@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rifu.model">
+
+	<class name="Student" table="t_student">
+		<id name="id" column="stuId">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="name" column="name" length="40"></property>
+		<!-- 设置级联 -->
+		<set name="subjects" table="t_subject">
+			<key column="stuId"></key>
+			<element column="subjectName" type="string"></element>
+		</set>
+	</class>
+
+</hibernate-mapping>

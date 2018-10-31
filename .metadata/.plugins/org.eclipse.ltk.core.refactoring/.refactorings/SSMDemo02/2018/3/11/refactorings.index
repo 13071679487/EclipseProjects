@@ -1,0 +1,37 @@
+1520748272589	Delete element
+1520749467707	Rename resource 'dispatcherServlet.xml'
+1520751337348	Delete element
+1520759846423	Delete elements
+1520762353100	Extract local variable 'department'
+1520762651162	Copy file
+1520769924708	Extract local variable 'department'
+1520773856556	Delete element
+1520779103588	Extract local variable 'employees'
+1520779664885	Extract local variable 'pageInfo'
+1520780285337	Extract local variable 'mm'
+1520780568792	Extract local variable 'result'
+1520780629155	Extract local variable 'request'
+1520780653936	Extract local variable 'pageInfo'
+1520780893650	Extract local variable 'emps'
+1520831055830	Rename resource 'spring-mvc.xml'
+1520841877840	Delete element
+1520841881999	Delete element
+1520845222394	Rename resource 'index.jsp'
+1520845227342	Copy file
+1520845247430	Copy file
+1520845256499	Delete element
+1520845271294	Rename resource 'list.jsp'
+1520865098231	Delete element
+1520865386110	Move 'bootstrap3' to 'webapp'
+1520866538424	Extract local variable 'depts'
+1520908737580	Delete elements
+1520909367544	Delete element
+1520913699397	Copy files
+1520914161933	Copy folder
+1520914191741	Copy files
+1520914643290	Copy compilation unit
+1520914792926	Copy compilation unit
+1520914803313	Copy compilation units
+1520914818503	Copy compilation units
+1520914857013	Copy compilation unit
+1520915702620	Copy compilation unit

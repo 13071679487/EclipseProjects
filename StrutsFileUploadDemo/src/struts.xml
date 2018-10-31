@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	
+	<!-- 针对大文件上传的配置，设置最大上传限制为20M -->
+	<constant name="struts.multipart.maxSize" value="20000000"></constant>
+
+	<package name="manager" extends="struts-default">
+	
+		<interceptors>
+			
+			<interceptor-stack name="atguigustack">
+				<interceptor-ref name="defaultStack">
+					<param name="fileUpload.maximumSize">2097152</param>
+					<!--  	
+					<param name="fileUpload.allowedTypes">text/html,text/xml</param>
+					<param name="fileUpload.allowedExtensions">html,dtd,xml</param>
+					-->
+				</interceptor-ref>
+			</interceptor-stack>
+			
+		</interceptors>
+		
+		<default-interceptor-ref name="atguigustack"></default-interceptor-ref>
+	
+		<action name="upload" class="com.rifu.action.FileUploadAction">
+			<result name="success">/success.jsp</result>
+			<result name="input">/fileupload.jsp</result>
+		</action>
+		
+		
+		<!-- 配置拦截器，设置只能上传照片，最大为81101B -->
+		<!-- <interceptor-ref name="fileUpload">
+				<param name="allowedTypes">image/bmp,image/x-png,image/gif,image/jpg,image/jpeg</param>
+				<param name="maximumSize">81101</param>
+			</interceptor-ref>
+			
+			<interceptor-ref name="defaultStack"></interceptor-ref> -->
+
+
+		<action name="uploads" class="com.rifu.action.FilesUploadAction">
+			<result name="success">/success.jsp</result>
+			<result name="input">/filesupload.jsp</result>
+		</action>
+		
+		
+		<action name="download" class="com.rifu.action.FileDownloadAction">
+			<result type="stream">
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+			</result>
+		</action>
+	</package>
+
+</struts>

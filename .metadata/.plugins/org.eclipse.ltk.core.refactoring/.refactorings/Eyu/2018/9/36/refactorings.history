@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Extract local variable &apos;user&apos; from expression &apos;session.getAttribute(&quot;currentUser&quot;)&apos;&#x0D;&#x0A;- Original project: &apos;Eyu&apos;&#x0D;&#x0A;- Variable name: &apos;user&apos;&#x0D;&#x0A;- Destination method: &apos;com.rifu.controller.AccountController.getCurrentUser()&apos;&#x0D;&#x0A;- Variable expression: &apos;session.getAttribute(&quot;currentUser&quot;)&apos;&#x0D;&#x0A;- Replace occurrences of expression with variable" description="Extract local variable &apos;user&apos;" final="false" id="org.eclipse.jdt.ui.extract.temp" input="/src\/main\/java&lt;com.rifu.controller{AccountController.java" name="user" replace="true" selection="5926 0" stamp="1536406884373" version="1.0"/>
+</session>

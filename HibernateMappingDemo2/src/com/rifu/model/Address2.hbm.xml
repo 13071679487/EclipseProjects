@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rifu.model">
+
+	<class name="Address2" table="t_address2">
+		<id name="id" column="addressId">
+			<generator class="native">
+			</generator>
+		</id>
+		
+		<property name="addressName" column="addressName" length="40"></property>
+		<property name="code" column="code" length="6"></property>
+		<!-- constrained:约束                   在这里表示使用主键约束，在上面使用addressId作为外键，但在t_address里addressId是主键 -->
+		<one-to-one name="user" class="com.rifu.model.User2" property-ref="address"></one-to-one>
+	</class>
+
+</hibernate-mapping>

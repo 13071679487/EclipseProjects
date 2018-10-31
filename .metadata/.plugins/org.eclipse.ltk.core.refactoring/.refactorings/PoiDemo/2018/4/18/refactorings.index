@@ -1,0 +1,36 @@
+1524974483434	Extract local variable 'cell'
+1524974528676	Extract local variable 'cellStyle'
+1524974971879	Extract local variable 'sheet'
+1524974987481	Extract local variable 'row'
+1524975346267	Extract local variable 'cell'
+1524975369124	Extract local variable 'cellStyle'
+1524977237838	Delete element
+1524977243467	Copy compilation unit
+1524977583353	Extract local variable 'font'
+1524977647770	Extract local variable 'cellStyle'
+1524979289941	Rename type 'ReadAndWriteByPoiDemo'
+1524979430478	Extract local variable 'row'
+1524979644996	Extract local variable 'format'
+1524982091673	Extract local variable 'sheet'
+1524982105542	Extract local variable 'row'
+1524982152666	Extract local variable 'cell'
+1524982191682	Extract local variable 'rowcontent'
+1524982322692	Extract local variable 'resp'
+1524982410261	Extract local variable 'outputStream'
+1524984026211	Delete element
+1524984034459	Copy file
+1524984039041	Delete element
+1524985829279	Delete element
+1524998366553	Delete element
+1524998768637	Copy file
+1524998774985	Delete element
+1524998814328	Copy file
+1524998819506	Delete element
+1524999379491	Copy file
+1524999720599	Delete element
+1525000077498	Copy file
+1525000083551	Delete element
+1525000561975	Copy file
+1525000655148	Delete element
+1525002096655	Delete element
+1525002102870	Delete element

@@ -1,0 +1,172 @@
+/**
+ * 
+ */
+package com.rifu.service.impl;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.google.common.collect.Lists;
+import com.rifu.common.Constants;
+import com.rifu.common.ResponseCode;
+import com.rifu.common.ServerResponse;
+import com.rifu.dao.CartMapper;
+import com.rifu.dao.ProductMapper;
+import com.rifu.pojo.Cart;
+import com.rifu.pojo.ProductWithBLOBs;
+import com.rifu.service.ICartService;
+import com.rifu.util.BigDecimalUtil;
+import com.rifu.util.PropertiesUtil;
+import com.rifu.vo.CartProductVo;
+import com.rifu.vo.CartVo;
+
+/**
+ * @author Lifu
+ * @create 2018年6月19日 下午3:00:26
+ */
+@Service
+public class CartServiceImpl implements ICartService {
+
+	@Autowired
+	private CartMapper cartMapper;
+
+	@Autowired
+	private ProductMapper productMapper;
+
+	public ServerResponse<CartVo> add(Integer userId, Integer productId, Integer count) {
+		if (productId == null || count == null) {
+			return ServerResponse.createByError(ResponseCode.ILLEGAL_ARG.getCode(), ResponseCode.ILLEGAL_ARG.getDesc());
+		}
+		Cart cart = cartMapper.selectByUserIdAndProductId(userId, productId);
+		if (cart == null) {
+			cart = new Cart();
+			cart.setUserId(userId);
+			cart.setProductId(productId);
+			cart.setQuantity(count);
+			cart.setChecked(true);
+			cart.setCreateTime(new Date());
+			cart.setUpdateTime(new Date());
+			cartMapper.insertSelective(cart);
+		} else {
+			Cart cartUpdate = new Cart();
+			cartUpdate.setCartId(cart.getCartId());
+			cartUpdate.setQuantity(cart.getQuantity() + count);
+			cartUpdate.setUpdateTime(new Date());
+			cartMapper.updateByPrimaryKeySelective(cartUpdate);
+		}
+		return this.list(userId);
+	}
+
+	public ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count) {
+		if (productId == null || count == null) {
+			return ServerResponse.createByError(ResponseCode.ILLEGAL_ARG.getCode(), ResponseCode.ILLEGAL_ARG.getDesc());
+		}
+		Cart cart = cartMapper.selectByUserIdAndProductId(userId, productId);
+		if (cart != null) {
+			cart.setCartId(cart.getCartId());
+			cart.setQuantity(count);
+			cart.setUpdateTime(new Date());
+			cartMapper.updateByPrimaryKeySelective(cart);
+		}
+		return this.list(userId);
+	}
+	
+	public ServerResponse<CartVo> delete(Integer userId, Integer productId) {
+		if (productId == null ) {
+			return ServerResponse.createByError(ResponseCode.ILLEGAL_ARG.getCode(), ResponseCode.ILLEGAL_ARG.getDesc());
+		}
+		cartMapper.deleteByUserIdAndProductId(userId, productId);
+		return this.list(userId);
+	}
+
+	public ServerResponse<CartVo> list(Integer userId) {
+		CartVo cartVo = getCartVoLimit(userId);
+		return ServerResponse.createBySuccess(cartVo);
+	}
+	
+	public ServerResponse<CartVo> checkedOrUnChecked(Integer userId,Integer productId,Integer checked){
+		cartMapper.selectOrUnSelect(userId, productId, checked);
+		return this.list(userId);
+	}
+	
+	public ServerResponse<Integer> getCartProductCount(Integer userId){
+		if(userId==null){
+			return ServerResponse.createBySuccess(0);
+		}
+		return ServerResponse.createBySuccess(cartMapper.getCartProductCount(userId));
+	}
+	
+	
+	
+	
+
+	private CartVo getCartVoLimit(Integer userId) {
+		CartVo cartVo = new CartVo();
+		List<Cart> cartList = cartMapper.selectByUserId(userId);
+		List<CartProductVo> cartProductVoList = Lists.newArrayList();
+		BigDecimal totalPrice = new BigDecimal("0");
+		Integer totalQuantity=0;
+
+		if (CollectionUtils.isNotEmpty(cartList)) {
+			for (Cart cart : cartList) {
+				CartProductVo vo = new CartProductVo();
+				vo.setId(cart.getCartId());
+				vo.setProductId(cart.getProductId());
+				vo.setUserId(userId);
+
+				ProductWithBLOBs product = productMapper.selectByPrimaryKey(cart.getProductId());
+				if (product != null) {
+					vo.setProductForeground(product.getForeground());
+					vo.setProductName(product.getProductName());
+					vo.setProductSubTitle(product.getSubtitle());
+					vo.setProductStatus(product.getProductStatus());
+					vo.setProductUnitPrice(BigDecimalUtil.format(product.getPrice()));
+					vo.setProductStock(product.getStock());
+
+					int buyLimit = 0;
+					if (product.getStock() >= cart.getQuantity()) {
+						buyLimit = cart.getQuantity();
+						vo.setLimitQuantity(Constants.CartStatus.LIMIT_NUM_SUCCESS);
+					} else {
+						buyLimit = product.getStock();
+						vo.setLimitQuantity(Constants.CartStatus.LIMIT_NUM_FAIL);
+
+						Cart cartForQuantity = new Cart();
+						cartForQuantity.setCartId(cart.getCartId());
+						cart.setQuantity(buyLimit);
+						cartMapper.updateByPrimaryKeySelective(cartForQuantity);
+					}
+					totalQuantity+=buyLimit;
+					vo.setQuantity(buyLimit);
+					vo.setProductTotalPrice(BigDecimalUtil.format(BigDecimalUtil.mul(product.getPrice().doubleValue(), vo.getQuantity())));
+					vo.setProductChecked(cart.getChecked());
+				}
+
+				if (cart.getChecked()) {
+					totalPrice = BigDecimalUtil.add(totalPrice.doubleValue(), vo.getProductTotalPrice().doubleValue());
+				}
+				cartProductVoList.add(vo);
+			}
+		}
+
+		cartVo.setTotalQuantity(totalQuantity);
+		cartVo.setCartProductList(cartProductVoList);
+		cartVo.setCartTotalPrice(totalPrice.setScale(2, BigDecimal.ROUND_DOWN));
+		cartVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
+		cartVo.setAllChecked(isAllChecked(userId));
+		return cartVo;
+	}
+
+	public boolean isAllChecked(Integer userId) {
+		if (userId == null) {
+			return false;
+		}
+		return cartMapper.isAllChecked(userId) == 0 ? true : false;
+	}
+
+}

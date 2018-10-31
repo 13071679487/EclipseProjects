@@ -1,0 +1,50 @@
+package com.rifu.util;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
+/**
+ * 
+ * @author Lifu
+ * @create 2018骞�6鏈�3鏃�   涓嬪崍8:56:56
+ */
+public class BigDecimalUtil {
+	
+	private final static  DecimalFormat df =new DecimalFormat("#0.00"); 
+
+    private BigDecimalUtil(){
+
+    }
+    
+    public static BigDecimal format(BigDecimal price){
+    	BigDecimal newDecimal = new BigDecimal(df.format(price.doubleValue()));
+    	return newDecimal; 
+    }
+
+
+    public static BigDecimal add(double v1,double v2){
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.add(b2);
+    }
+
+    public static BigDecimal sub(double v1,double v2){
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.subtract(b2);
+    }
+
+
+    public static BigDecimal mul(double v1,double v2){
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.multiply(b2);
+    }
+
+    public static BigDecimal div(double v1,double v2){
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.divide(b2,2,BigDecimal.ROUND_HALF_UP);//鍥涜垗浜斿叆,淇濈暀2浣嶅皬鏁�
+        //闄や笉灏界殑鎯呭喌
+    }
+}

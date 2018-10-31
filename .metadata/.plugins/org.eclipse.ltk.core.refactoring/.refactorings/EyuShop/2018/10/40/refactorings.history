@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Extract local variable &apos;newDecimal&apos; from expression &apos;new BigDecimal(df.format(price.doubleValue()))&apos;&#x0D;&#x0A;- Original project: &apos;EyuShop&apos;&#x0D;&#x0A;- Variable name: &apos;newDecimal&apos;&#x0D;&#x0A;- Destination method: &apos;com.rifu.util.BigDecimalUtil.format()&apos;&#x0D;&#x0A;- Variable expression: &apos;new BigDecimal(df.format(price.doubleValue()))&apos;&#x0D;&#x0A;- Replace occurrences of expression with variable" description="Extract local variable &apos;newDecimal&apos;" final="false" id="org.eclipse.jdt.ui.extract.temp" input="/src\/main\/java&lt;com.rifu.util{BigDecimalUtil.java" name="newDecimal" replace="true" selection="523 0" stamp="1538665489789" version="1.0"/>
+</session>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rifu.model">
+
+	<class name="WorkImage" table="t_workImage">
+		<id name="id" column="imageId">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="imageName" column="imageName" length="40"></property>
+		<!-- 设置级联 -->
+		
+		<many-to-one name="student" column="stuId" class="com.rifu.model.Student"></many-to-one>
+	</class>
+
+</hibernate-mapping>

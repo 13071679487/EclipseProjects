@@ -1,0 +1,26 @@
+1523363804736	Delete elements
+1523447533351	Copy file
+1523449763111	Extract local variable 'user'
+1523450159945	Extract local variable 'outputStream'
+1523452679071	Extract local variable 'criteria'
+1523452921679	Extract local variable 'results'
+1523453519569	Copy file
+1523458464601	Rename type 'DispatherController'
+1523458884882	Delete element
+1523459990709	Delete element
+1523459997211	Delete element
+1523500405529	Extract local variable 'results'
+1523500450980	Extract local variable 'criteria'
+1523500530235	Extract local variable 'user'
+1523501182140	Extract local variable 'attribute'
+1523516361582	Copy file
+1523516374921	Rename resource 'improveinfo.jsp'
+1523520078117	Copy file
+1523585770093	Copy file
+1523589198907	Extract local variable 'criteria'
+1523589848366	Rename method 'updateRoleSlective'
+1523590669268	Delete elements
+1523590681048	Delete element
+1523601006806	Extract local variable 'MD5_pwd'
+1523603136813	Delete element
+1523694245025	Extract local variable 'image'

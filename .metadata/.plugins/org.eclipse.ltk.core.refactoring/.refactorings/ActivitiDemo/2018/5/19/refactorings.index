@@ -1,0 +1,32 @@
+1526022490803	Extract local variable 'pec'
+1526022720053	Extract local variable 'pe'
+1526023269854	Extract local variable 'pec'
+1526023278105	Extract local variable 'pe'
+1526034413397	Extract local variable 'is'
+1526034423663	Extract local variable 'zipInputStream'
+1526037011375	Rename type 'ActivitiCRUD'
+1526043026635	Extract local variable 'taskService'
+1526043288181	Extract local variable 'taskService'
+1526043366789	Extract local variable 'variable1'
+1526044747570	Extract local variable 'variables'
+1526046131012	Copy file
+1526052505729	Copy file
+1526052897660	Copy compilation unit
+1526052965776	Move compilation unit
+1526052972112	Move compilation unit
+1526052985781	Rename package 'com.rifu.activiti.gateway'
+1526053012084	Rename package 'gateway'
+1526106262759	Copy file
+1526106424565	Copy compilation unit
+1526107385971	Copy file
+1526107487981	Extract local variable 'variables'
+1526107916600	Copy file
+1526107982145	Copy compilation unit
+1526109196658	Copy compilation unit
+1526109248482	Copy file
+1526109724615	Copy compilation unit
+1526109753376	Copy file
+1526110518679	Extract local variable 'identityService'
+1526110923727	Copy compilation unit
+1526110940413	Rename type 'MultiPersonalTaskAssign'
+1526111009368	Copy file

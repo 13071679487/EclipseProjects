@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 这里的声明相当于new了一个对象，且该对象默认是单例模式 -->
+	<bean id="dog" class="com.rifu.model.Dog"></bean>
+	<bean id="cat" class="com.rifu.model.Cat"></bean>
+
+	<bean id="bottle" class="com.rifu.model.Bottle">
+	<!-- 设置属性 -->
+		<property name="animal" ref="cat"></property>
+	</bean>
+  
+</beans>

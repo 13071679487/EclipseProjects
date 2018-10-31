@@ -1,0 +1,6 @@
+1525143975710	Extract local variable 'factoryBean'
+1525175768214	Extract local variable 'headers'
+1525175863482	Extract local variable 'header'
+1525175883248	Extract local variable 'ele'
+1525176782349	Extract local variable 'uList'
+1525176796428	Extract local variable 'pList'

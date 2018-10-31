@@ -1,0 +1,33 @@
+1525585519995	Copy file
+1525585639561	Copy file
+1525585760443	Copy file
+1525585770895	Rename resource 'summernote.jsp'
+1525607029763	Copy file
+1525613308491	Copy file
+1525617662909	Copy file
+1525664810215	Copy file
+1525665629957	Extract local variable 'titleQuery'
+1525665719094	Extract local variable 'typeQuery'
+1525665883714	Extract local variable 'query'
+1525665986265	Extract local variable 'criteria'
+1525670760462	Extract local variable 'mixTitleAndContentQueryBuidler'
+1525701116385	Extract local variable 'currentUser'
+1525701231408	Extract local variable 'principal'
+1525755376974	Extract local variable 'key'
+1525755452703	Extract local variable 'afterPwd'
+1525755781590	Extract local variable 'decodePwd'
+1525782520760	Delete element
+1525785516545	Extract local variable 'isAvailable'
+1525791281000	Extract local variable 'cookies'
+1525791771122	Extract local variable 'userToken'
+1525792031026	Extract local variable 'account'
+1525792070088	Extract local variable 'principal'
+1525839040508	Extract local variable 'disturbString'
+1525839969842	Extract local variable 'decodeToken'
+1525845797857	Copy file
+1525845947530	Copy files
+1525845973818	Copy file
+1525846456131	Copy compilation unit
+1525847395531	Copy compilation unit
+1525917812272	Copy file
+1525959107925	Copy file

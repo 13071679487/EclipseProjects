@@ -1,0 +1,121 @@
+/**
+ * 
+ */
+package com.rifu.service.impl;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.rifu.common.Constants;
+import com.rifu.common.ResponseCode;
+import com.rifu.common.ServerResponse;
+import com.rifu.dao.ProductMapper;
+import com.rifu.dao.RepertoryRecordMapper;
+import com.rifu.pojo.Product;
+import com.rifu.pojo.ProductWithBLOBs;
+import com.rifu.pojo.RepertoryRecord;
+import com.rifu.service.IRepertoryService;
+import com.rifu.util.BigDecimalUtil;
+import com.rifu.util.DateTimeUtil;
+import com.rifu.vo.RepertoryRecordVo;
+
+/**
+ * @author Lifu
+ * @create 2018年9月29日 下午1:22:32
+ */
+@Service
+public class RepertoryServiceImpl implements IRepertoryService {
+
+	@Autowired
+	RepertoryRecordMapper repertoryRecordMapper;
+	
+	@Autowired
+	ProductMapper productMapper;
+
+	public ServerResponse getRepertoryRecordList(int pageNum, int size) {
+		PageHelper.startPage(pageNum, size, true);
+		List<RepertoryRecord> repertoryRecordList = repertoryRecordMapper.selectRepertoryRecordList();
+		PageInfo pageInfo = new PageInfo(repertoryRecordList);
+		List<RepertoryRecordVo> vos = new ArrayList<RepertoryRecordVo>();
+		for(RepertoryRecord record:repertoryRecordList){
+			vos.add(assemableRepertoryRecordVo(record));
+		}
+		pageInfo.setList(vos);
+		return ServerResponse.createBySuccess(pageInfo);
+	}
+	
+	/**
+	 * 进货
+	 * @param record
+	 * @return
+	 */
+	public ServerResponse stockProduct(RepertoryRecord record){
+		ProductWithBLOBs product = productMapper.selectByPrimaryKey(record.getProductId());
+		if(product == null){
+			return ServerResponse.createByError(ResponseCode.ERROR.getCode(), "要更新库存的产品不存在");
+		}
+		
+		Product tmpProduct = new Product();
+		tmpProduct.setProductId(record.getProductId());
+		int rowCount=0;
+		if(record.getRecordType() == 0){
+			//进货
+			tmpProduct.setStock(product.getStock()+record.getRecordAmount());
+			rowCount=productMapper.updateProductStock(tmpProduct);
+		}else{
+			//出货
+			if(product.getStock()>=record.getRecordAmount()){
+				tmpProduct.setStock(product.getStock()-record.getRecordAmount());
+				rowCount = productMapper.updateProductStock(tmpProduct);
+			}else{
+				return ServerResponse.createByErrorWithMessage("库存不足");
+			}
+		}
+		if(rowCount>0){
+			int rowCount2 = repertoryRecordMapper.insertSelective(record);
+			if(rowCount2>0){
+				return ServerResponse.createBySuccess();
+			}
+		}
+		return ServerResponse.createByError();
+	}
+
+	/**
+	 * 构建进出库记录的Vo
+	 * @param record
+	 * @return
+	 */
+	private RepertoryRecordVo assemableRepertoryRecordVo(RepertoryRecord record){
+		if(record == null){
+			return null;
+		}
+		RepertoryRecordVo vo = new RepertoryRecordVo();
+		vo.setId(record.getId());
+		vo.setProductId(record.getProductId());
+		ProductWithBLOBs product = productMapper.selectByPrimaryKey(record.getProductId());
+		if(product != null){
+			vo.setProductName(product.getProductName());
+		}
+		if(record.getRecordType()==0){
+			vo.setRecordType("进货");
+		}else{
+			vo.setRecordType("出货");
+		}
+		vo.setAmount(record.getRecordAmount());
+		vo.setUnit(record.getUnit());
+		vo.setUnitPrice(BigDecimalUtil.format(record.getUnitPrice()));
+		vo.setProvider(record.getProvider());
+		
+		vo.setCreateTime(DateTimeUtil.dateToStr(record.getCreateTime()));
+		vo.setUpdateTime(DateTimeUtil.dateToStr(record.getUpdateTime()));
+		
+		return vo;
+	}
+
+}

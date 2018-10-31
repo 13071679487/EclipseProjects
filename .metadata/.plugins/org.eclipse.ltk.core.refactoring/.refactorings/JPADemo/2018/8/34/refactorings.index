@@ -1,0 +1,5 @@
+1535118667053	Extract local variable 'entityManagerFactory'
+1535118713870	Extract local variable 'entityManager'
+1535118746783	Extract local variable 'ts'
+1535118771909	Extract local variable 'customer'
+1535121553001	Copy packages

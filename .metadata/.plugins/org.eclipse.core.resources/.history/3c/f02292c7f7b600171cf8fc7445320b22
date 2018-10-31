@@ -1,0 +1,67 @@
+package servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.User;
+import dao.UserDao;
+
+@WebServlet("/user")
+public class GetUserServlet extends HttpServlet {
+	private static final int GET_USER_BYID = 1;
+	private static final int GET_FRIENDS_BYID = 2;
+	private static final int GET_PUBLISHS_BYID = 3;
+	private static final int GET_SESSIONS_BYID = 4;
+	private static final int GET_COLLECTIONS_BYID = 5;
+	private static final int GET_FANS_BYID = 6;
+	private static final int GET_LIKES_BYID = 7;
+
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setContentType("text/html");
+		resp.setCharacterEncoding("utf-8");
+		PrintWriter printWriter = resp.getWriter();
+		int method = Integer.parseInt(req.getParameter("method"));
+		String phone = req.getParameter("phone");
+		UserDao ud = new UserDao();
+		switch (method) {
+		case GET_USER_BYID:
+			User user = ud.getUserByPhone(phone);
+			if (user != null) {
+
+				String result = "{" + "\"id\":\"" + user.getId() + "\"" + "," + "\"username\":\"" + user.getUsername()
+						+ "\"" + "," + "\"headicon\":\"" + user.getIcon() + "\"" + "," + "\"sex\":\"" + user.getSex()
+						+ "\"" + "," + "\"address\":\"" + user.getAddress() + "\"" + "," + "\"userdynamic\":\""
+						+ user.getDynamic() + "\"" + "}";
+				printWriter.write(result);
+			}else printWriter.write("≤È—Ø ß∞‹");
+			break;
+		case GET_FRIENDS_BYID:
+			break;
+		case GET_PUBLISHS_BYID:
+			break;
+		case GET_SESSIONS_BYID:
+			break;
+		case GET_COLLECTIONS_BYID:
+			break;
+		case GET_FANS_BYID:
+			break;
+		case GET_LIKES_BYID:
+			break;
+		}
+		printWriter.flush();
+	}
+}

@@ -1,0 +1,8 @@
+使用注解配置 SQL 映射器
+
+基本映射语句
+1，@Insert
+2，@Update
+3，@Delete
+4，@Select
+第二节：结果集映射语句

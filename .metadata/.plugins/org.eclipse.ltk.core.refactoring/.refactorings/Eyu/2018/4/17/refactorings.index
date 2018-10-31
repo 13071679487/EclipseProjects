@@ -1,0 +1,8 @@
+1524476860188	Extract local variable 'criteria'
+1524478734842	Extract local variable 'diarys'
+1524482737669	Extract local variable 'diaryList'
+1524483046993	Delete element
+1524483060621	Copy compilation unit
+1524625044938	Extract local variable 'selectByExample'
+1524625075546	Extract local variable 'size'
+1524625134893	Extract local variable 'lastoneId'

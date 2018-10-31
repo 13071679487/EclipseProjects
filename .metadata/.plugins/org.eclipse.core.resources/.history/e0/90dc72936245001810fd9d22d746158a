@@ -1,0 +1,802 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>个人中心</title>
+<%
+	pageContext.setAttribute("path", request.getContextPath());
+%>
+<script type="text/javascript"
+	src="${path}/bootstrap3/js/jquery-1.11.2.min.js"></script>
+<!-- 引入js文件 -->
+<script src="${path }/bootstrap3/js/bootstrap.min.js"></script>
+<!-- 引入样式 -->
+<link href="${path}/bootstrap3/css/bootstrap.min.css" rel="stylesheet">
+
+<style type="text/css">
+.photoContainer{
+	margin:3px;
+	float:left;
+	height:90px;
+	width:60px;
+	position:relative;
+	border:2px dotted #eee;
+}
+.photoItem{
+	float:left;
+	height:150px;
+	width:100px;
+	margin:3px;
+	border-radius:10px;
+}
+.photoItem-sm{
+	position:absolute;
+	height:100%;
+	width:100%;
+	border-radius:3px;
+}
+.photoItemDelete{
+	width:20px;
+	height:20px;
+	position:absolute;
+	padding:0;
+	top:-5px;
+	right:0;
+	margin:0;
+	color:#FF7256;
+	border-radius:50%;
+	background-color:#eee;
+	z-index:99;
+}
+
+.photoItemAdd{
+	width:20px;
+	height:20px;
+	position:absolute;
+	top:40%;
+	left:35%;
+	padding:0;
+	right:0;
+	margin:0;
+	color:#5cb85c;
+	border-radius:50%;
+	background-color:#eee;
+	z-index:99;
+}
+.icon{
+	width:15px;
+	height:15px;
+}
+.bg{
+	background-color:white;
+}
+@-webkit-keyframes rotation{
+from {-webkit-transform: rotate(0deg);}
+to {-webkit-transform: rotate(360deg);}
+}
+.rotate-360-forever{
+	-webkit-transform: rotate(360deg);
+	animation: rotation 1s linear infinite;
+	-moz-animation: rotation 1s linear infinite;
+	-webkit-animation: rotation 1s linear infinite;
+	-o-animation: rotation 1s linear infinite;
+}
+</style>
+
+</head>
+<jsp:include page="header.jsp"></jsp:include>
+<body>
+	<div class="contianer-fluid">
+		<div class="row"
+			style="padding: 3% 0; margin: 0 auto; ">
+			<div class="col-md-1"></div>
+			<!--头像、姓名  -->
+			<div class="col-md-2" style="position:relative;text-align: center">
+				<div id="image-parent" style="position:absolute;">
+					<div id="image-upload" style="position:absolute;left:0;top:0;z-index:99">
+						<button id="uploadHeadicon" name="icon" type="button" class="btn btn-success" style="margin-top:35px;width:100px;height:30px;border-radius:10px;">更换头像</button>
+					</div>
+					<div style="position:absolute;left:0;top:0;">
+						<img id="headicon" class="img-circle" alt=""
+							src=""
+							style="width: 100px; height: 100px;" /> 
+					</div>
+				</div>
+				<br><br> 
+				<div style="position:absolute;top:110px;">
+					<span id="userName" class="glyphicon glyphicon-user"></span> <br>
+					<span id="userGender" class=""></span> 
+				</div>
+			</div>
+			<!-- 个人的一些详细信息 -->
+			<div class="col-md-4" style="margin-top: 5%">
+				<span id="userAddress" class="glyphicon glyphicon-globe"></span> 
+				<br> <br>
+				<span id="userDesc" class="glyphicon glyphicon-dashboard"></span>
+			</div>
+			<div class="col-md-2">
+				<button type="button" id="btn_edit" class="btn btn-xs btn-info"><span class="glyphicon glyphicon-pencil"></span>&nbsp;编辑资料</button>
+			</div>
+		</div>
+	</div>
+	<hr style="margin:0 3%;">
+	<!-- 个人中心需要显示的一些动态 -->
+	<div class="row" style="margin: 10px 3%;">
+		<div class="col-md-10">
+			<ul class="nav nav-tabs" id="pagenav">
+			  <li id="to_mypublish" role="presentation" class="active"><a >我的发布</a></li>
+				<li id="to_message" role="presentation"><a >留言墙</a></li>
+				<li id="to_test" role="presentation"><a >测试</a></li>
+			  <li id="refresh_dynamic_body" role="presentation" style="float:right;padding-top:5px;"><button class="btn btn-sm btn-success">刷新&nbsp;<span class="glyphicon glyphicon-repeat"></span> </button></li>
+			</ul>
+			
+			<div id="dynamic_header" class="container-fluid" style="margin-top:10px;">
+				<!-- 这里显示header的一些信息，比如说刷新图标 -->
+				<div id="loadingRow" class="row" style="text-align:center">
+					<span class="rotate-360-forever glyphicon glyphicon-repeat"></span> <span>加载中...</span>
+				</div>
+			</div>
+			
+			<div id="dynamic_body" class="container-fluid" style="padding-top:5px;">
+			<!-- 这里是中间内容显示的控件 -->
+			</div>
+			
+			<div id="dynamic_footer" class="container-fluid" style="margin-top:10px;">
+				<!-- 这里显示footer的一些信息，比如说翻页导航 -->
+				<div class="col-md-4" id="page_info">
+			
+				</div>
+				<div class="col-md-6 col-md-offset-1" id="page_nav">
+					
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<h3>最近动态</h3>
+			<ul id="dynamic_list" class="list-group">
+				<li class="list-group-item">Cras justo odio</li>
+			</ul>
+		</div>
+	</div>
+</body>
+<jsp:include page="footer.jsp"></jsp:include>
+
+<!-- 上传头像的模态框 -->
+<div class="modal fade" id="uploadIconModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">上传头像</h4>
+      </div>
+      <div class="modal-body">
+        <button type="button" class="btn btn-success" id="btn_upload_file"><span class="glyphicon glyphicon-picture"></span>&nbsp;选择图片</button>
+        <form action="${path}/user/uploadicon" method="POST" id="uploadIconForm" class="form-horizontal" enctype="multipart/form-data" style="height:280px;">
+          <div  class="form-group">
+		    <div class="col-sm-6">
+		      <input type="hidden" name="id" value="${currentUser.userId }">
+		      <input type="file" name="icon" class="form-control" style="display:none;" id="testfile">
+		      <span class="help-block"></span>
+		    </div>
+		  </div>
+		  
+		  <div  class="form-group">
+			  <div class="col-md-6 col-md-offset-3">
+			  	<img class="img-circle" id="preview" alt="" src="" style="width:200px;height:200px;"/>
+			  </div>
+		  </div>
+		  
+		  <div  class="form-group">
+			  <div class="col-md-4 col-md-offset-4">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		        <input type="submit" class="btn btn-primary" id="btn_upload" value="上传"/>
+			  </div>
+		  </div>
+		</form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 用户修改的模态框 -->
+<div class="modal fade" id="userUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">用户修改</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+		<!--Name  -->
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label">Name</label>
+		    <div class="col-sm-6">
+		      <input type="text" name="userName"class="form-control" id="input_update_name" placeHolder="Please input name">
+		      <span class="help-block"></span>
+		    </div>
+		  </div>
+		  
+		  <!-- Email -->
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label">Email</label>
+		    <div class="col-sm-8">
+		      <input type="email" name="userEmail" class="form-control" id="input_update_email" placeHolder="Please input email">
+		      <span class="help-block"></span>
+		    </div>
+		  </div>
+		  
+		  <!-- Address -->
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label">Address</label>
+		    <div class="col-sm-8">
+		      <input type="text" name="userAddress" class="form-control" id="input_update_address" placeHolder="Please input address">
+		      <span class="help-block"></span>
+		    </div>
+		  </div>
+		  
+		  <!-- gender -->
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label">Gender</label>
+		    <div class="col-sm-10">
+		      <label class="radio-inline">
+				  <input type="radio" name="userGender" id="gender1_update_input" value="m"> 男
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="userGender" id="gender2_update_input" value="f"> 女
+				</label>
+		    </div>
+		  </div>
+		  
+		  <!-- Description -->
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label">Description</label>
+		    <div class="col-sm-10">
+		      <textarea name="userDesc"  id="input_update_desc" class="form-control" rows="3" placeHolder="Please input description"></textarea>
+		      <span class="help-block"></span>
+		    </div>
+		  </div>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="btn_update_user">更新</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 用户发表的模态框 -->
+<div class="modal fade" id="publishModal" tabindex="99" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">发表</h4>
+      </div>
+      <div class="modal-body">
+      	<form class="form-horizontal" action="${path}/dynamic" method="POST" enctype="multipart/form-data" >
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label" style="text-align:right;">标题</label>
+		    <div class="col-sm-6">
+		      <input type="text" name="dynamicTitle"class="form-control" id="input_title" placeHolder="Please input name">
+		      <span class="help-block"></span>
+		    </div>
+		  </div>
+		  
+		  <!-- Description -->
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label" style="text-align:right;">正文</label>
+		    <div class="col-sm-10">
+		      <textarea name="dynamicContent"  id="input_content" class="form-control" style="min-height: 90px;" placeHolder="Please input description"></textarea>
+		      <span class="help-block"></span>
+		    </div>
+		  </div>
+		  
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label" style="text-align:right;">图片</label>
+		    <div class="col-sm-10 container-fluid">
+		    	<div><span id="choosePhotoTips"></span></div>
+		    	<div class="row" id="photos">
+		    	<!-- 
+			    	<div class="photoContainer">
+			    		<span  class="btn photoItemDelete glyphicon glyphicon-minus"></span>
+			    		<img alt="" class="photoItem-sm" src="${path }/user/icon/164"/>
+			    	</div>
+		    	 -->
+			    	
+			    	<div class="photoContainer">
+			    		<span  class="btn photoItemAdd glyphicon glyphicon-plus"></span>
+			    	</div>
+			    	
+		    	</div>
+			      <input type="hidden" name="dynamicAuthorid" value="${currentUser.userId }">
+		    	<div  class="form-group" id="fileContainer">
+			      <input type="file" name="photo" class="form-control" style="display:none;">
+				</div>
+		    </div>
+		  </div>
+		  <div class="form-group" style="margin-top:10px;">
+		    <label class="col-sm-2 control-label" style="text-align:right;">对谁可见</label>
+		    <div class="col-sm-3">
+		    	<!-- 提交角色id即可 -->
+		      <select class="form-control" style="height:25px;padding:0 6px;" name="dynamicType" id="dynamicType_select">
+		      	<option value="1">仅自己可见</option>
+		      	<option value="2">好友可见</option>
+		      	<option value="3">附近可见</option>
+		      	<option value="4">所有人可见</option>
+		      </select>
+		    </div>
+		  </div>
+		  
+		  <div class="form-group" style="text-align:center;">
+		  	<div class="col-md-4 col-md-offset-4">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		        <input type="submit" class="btn btn-primary" id="btn_save_publish" value="提交"/>
+			  </div>
+		  </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+var user;
+var currentTab=1;
+var myPublishList,messageList,testList;
+
+$(document).on("click",".photoItemAdd",function(){
+	var photoLength=$(".photoItem-sm").length;
+	if(photoLength<6){
+		$("#fileContainer input").last().click();
+	}else{
+		$("#choosePhotoTips").prop({"style":"color:#FF6347"}).text("最多选择六张");
+	}
+})
+
+$(document).on("click",".photoItemDelete",function(){
+	var index=$(this).attr("index");
+	console.log("要删除的index是："+index);
+	$.each($("#fileContainer input"),function(i,item){
+		if(i==index){
+			$(item).remove();
+		}
+	})
+	$(this).parent().remove();
+	$("#choosePhotoTips").text("");
+})
+
+/**
+ * 选择了文件进行预览
+ */
+$(document).on("change","#fileContainer input",function(){
+	console.log("choose file...");
+	if(this.files&&this.files[0]){
+		var reader =new FileReader();
+		reader.onload=function(evt){
+			//进行预览
+			var imgEle=$("<img></img>").addClass("photoItem-sm").prop({"src":evt.target.result});
+			var deleteEle=$("<span></span>").addClass("btn photoItemDelete glyphicon glyphicon-minus").attr({"index":$(".photoItemDelete").length});
+			var photoContainerEle=$("<div></div>").addClass("photoContainer")
+									.append(imgEle)
+									.append(deleteEle);
+			$(photoContainerEle).insertBefore($(".photoContainer").last());
+			//添加新的文件填充器 <input type="file" name="photo" style="display:none;">
+			var fileEle=$("<input></input>").prop({"type":"file","name":"photo","style":"display:none;"});
+			$("#fileContainer").append(fileEle);
+		}
+		reader.readAsDataURL(this.files[0]);
+	}
+})
+$("#btn_save_publish").on("click",function(){
+	console.log("click the btn_save_publish");
+	$("#fileContainer input").last().remove();
+})
+
+$(function(){
+	var currentUser="${currentUser}";
+	if(currentUser!=null&&currentUser!=''){
+		$("#image-upload").hide();
+		refresh();
+		loadMyPublish();
+		initDynamicList();
+	}else{
+		$(location).attr("href","${path}/dispatcher/login");
+	}
+})
+
+/**
+ * 隐藏其他的刷新图标
+ */
+function refreshStatus(parent){
+	$.each($("#pagenav li"),function(index,ele){
+		$(ele).removeClass("active");
+	})
+	$(parent).addClass("active");
+}
+
+/**
+ * 点击了去首页
+ */
+$("#to_mypublish").on("click",function(){
+	currentTab=1;
+	refreshStatus(this);
+	if(myPublishList==null||myPublishList==''){
+		loadMyPublish();
+	}else{
+		$("#dynamic_body").empty();
+		$("#dynamic_body").append(myPublishList);
+	}
+})
+
+/**
+ * 点击了去附近
+ */
+$("#to_message").on("click",function(){
+	currentTab=2;
+	refreshStatus(this);
+	loadMessage();
+})
+
+/**
+ * 点击了去树洞
+ */
+$("#to_test").on("click",function(){
+	currentTab=3;
+	refreshStatus(this);
+	loadTest();
+})
+
+/**
+ * 点击了刷新
+ */
+$("#refresh_dynamic_body").on("click",function(){
+	switch(currentTab){
+		case 1:
+			$("#to_mypublish").click();
+			break;
+		case 2:
+			$("#to_message").click();
+			break;
+		case 3:
+			$("#to_test").click();
+			break;
+	}
+})
+
+/**
+ * 加载我的发布
+ */
+function loadMyPublish(){
+	$("#dynamic_body").empty();
+	var publishEle=$("<h3></h3>").addClass("btn btn-info")
+							.attr({"role":"button","id":"btn_publish","style":"text-align: center;width:50%;"})
+							.append($("<strong></strong>").append("+"))
+							.append("&nbsp;&nbsp;发表");
+	var publishRow=$("<div></div>").prop({"style":"text-align:center;"}).addClass("row").append(publishEle);
+	var hrEle=$("<hr>").prop({"style":"border:2px solid #ccc;border-radius:5px;"});
+	$("#dynamic_body").append(publishRow).append(hrEle);
+	$.ajax({
+		url:"${path}/dynamics/${currentUser.userId }",
+		type:"POST",
+		data:{"pn":1,"size":8},
+		success:function(result){
+			if(result.code==100){
+				var list=result.extend.pageInfo.list;
+				buildPublishInfo(list);
+			}
+		}
+	});
+}
+
+function buildPublishInfo(list){
+	$.each(list,function(index,item){
+		var hrEle=$("<hr>").prop({"style":"border:2px solid #ccc;border-radius:5px;"});
+		
+		var userHeadiconEle=$("<img></img>").addClass("img-circle").prop({"style":"height:35px;width:35px;","src":"${path}/user/icon/"+item.dynamicAuthorid});
+		var userNameEle=$("<span></span>").prop({"style":"color:gray;font-size:16px;margin-left:3px;"})
+							.append(item.author.userName);
+		var userHrefEle=$("<a></a>").prop({"href":"${path}/dispatcher/personal/"+item.dynamicAuthorid})
+							.addClass("btn btn-link")
+							.append(userHeadiconEle)
+							.append(userNameEle);
+		var createTimeEle=$("<span></span>").prop({"style":"color:gray;font-size:12px;margin-left:10px;"})
+							.append(formatDate(item.dynamicCreatetime));
+		var followEle=$("<button></button>").prop({"type":"button","style":"float: right !important;margin-right: 10px;"})
+						.addClass("btn").append("+&nbsp;关注");
+		var userInfoRow=$("<div></div>").addClass("row")
+							.append(userHrefEle)
+							.append(createTimeEle)
+							.append(followEle);
+		
+		var titleEle=$("<h4></h4>").append(item.dynamicTitle);
+		var titleRow=$("<div></div>").prop({"style":"margin-left:10px;margin-top:5px;"})
+						.addClass("row")
+						.append(titleEle);
+		
+		var contentEle=$("<p></p>").append(item.dynamicContent);
+		var contentRow=$("<div></div>").prop({"style":"margin-left:10px;"})
+						.addClass("row")
+						.append(contentEle);
+		
+		var photoRow=$("<div></div>").prop({"style":"padding:0 40px;"})
+						.addClass("row");
+						
+		if(item.photos!=null&&item.photos!=''){
+			console.log(item.photos);
+			$.each(item.photos,function(i,photo){
+				var photoEle=$("<img></img>").prop({"src":"${path}/dynamicPhoto/"+photo.photoId}).addClass("photoItem");
+				photoRow.append(photoEle);
+			});
+		}
+		
+		var hrSperatorEle=$("<hr></hr>").prop({"style":"height:1px;border:none;border-top:1px solid #aaa;"});
+		
+		var pageviewEle=$("<a></a>").attr("role","button")
+						.prop({"style":"color:gray;float: right !important;margin-right: 10px;"})
+						.addClass("btn")
+						.append($("<img></img>").addClass("icon").prop({"src":"https://cdn-img.easyicon.net/png/11954/1195462.gif"}))
+						.append("点赞");
+		var likeEle=$("<a></a>").attr("role","button")
+					.prop({"style":"color:gray;float: right !important;margin-right: 10px;"})
+					.addClass("btn")
+					.append($("<img></img>").addClass("icon").prop({"src":"https://cdn-img.easyicon.net/png/11982/1198247.gif"}))
+					.append(item.dynamicPageview);
+		var toolRow=$("<div></div>").prop({}).addClass("row")
+						.append(pageviewEle)
+						.append(likeEle);
+		
+		var containerEle=$("<div></div>").addClass("container-fluid")
+							.append(userInfoRow)
+							.append(titleRow)
+							.append(contentRow)
+							.append(photoRow)
+							.append(hrSperatorEle)
+							.append(toolRow);
+		
+		var rowEle=$("<div></div>").addClass("row")
+					.append(containerEle)
+					.append(hrEle);
+		$("#dynamic_body").append(rowEle);
+	})
+	myPublishList=$("#dynamic_body").html();
+}
+
+/**
+ * 加载留言墙
+ */
+function loadMessage(){
+	$("#dynamic_body").empty();
+}
+
+/**
+ * 加载测试
+ */
+function loadTest(){
+	$("#dynamic_body").empty();
+}
+
+$(document).on("click","#btn_publish",function(){
+	console.log("click the btn_publish..");
+	//$("#publishModal form").empty();
+	
+	$("#publishModal").modal();
+	setTextAreaAdapter($("#input_content"));
+})
+
+
+
+$("#image-parent").mouseover(function(){
+	$("#image-upload").fadeIn('slow');
+})
+
+$("#image-parent").mouseleave(function(){
+	$("#image-upload").fadeOut("slow");
+})
+
+$("#uploadHeadicon").on("click",function(){
+	$("#uploadIconModal").modal();
+})
+
+//选择照片
+$("#btn_upload_file").on("click",function(){
+	$("#testfile").click();
+})
+
+//监听所选择图片变化情况
+$("#testfile").change(function(){
+	console.log("change the photo");
+	if(this.files&&this.files[0]){
+		var reader =new FileReader();
+		reader.onload=function(evt){
+			$("#preview").prop("src",evt.target.result);
+		}
+		reader.readAsDataURL(this.files[0]);
+	}
+})
+
+function refresh(){
+	getUser("${currentUser.userId}");
+}
+
+/**
+ * 点击了编辑个人资料的按钮
+ */
+$("#btn_edit").on("click",function(){
+	resetForm("#userUpdateModal form");	
+	
+	preparedData();
+	
+	$("#btn_update_user").attr("userId",user.userId);
+	
+	$("#userUpdateModal").modal({
+		backdrop:"true",
+		keyborad:true
+	});
+})
+/**
+ * 重置表单的信息
+ */
+function resetForm(ele){
+	$(ele)[0].reset();
+	$(ele).find("*").removeClass("has-error has-success");
+	$(ele).find(".help-block").text("");
+}
+
+/**
+ * 初始化填充用户个人资料
+ */
+function initData(){
+	if(user.userId!=null&&user.userId!='')
+		$("#headicon").prop("src","${path}/user/icon/"+user.userId);
+	$("#userName").empty().append("&nbsp;"+user.userName);
+	var gender=user.userGender=='m'?'男':'女';
+	$("#userGender").empty().append("&nbsp;"+gender);
+	$("#userAddress").empty().append("&nbsp;"+user.userAddress);
+	$("#userDesc").empty().append("&nbsp;"+user.userDesc);
+}
+/**
+ * 初始化表单填充数据
+ */
+function preparedData(){
+	$("#input_update_name").val(user.userName);
+	$("#input_update_email").val(user.userEmail);
+	$("#input_update_address").val(user.userAddress);
+	$("#userUpdateModal input[name=userGender]").val([user.userGender]);
+	$("#input_update_desc").val(user.userDesc);
+}
+
+/**
+ * 根据用户id获取用户信息
+ */
+function getUser(id){
+	$.ajax({
+		url:"${path}/user/"+id,
+		type:"GET",
+		success:function(result){
+			if(result.code==100){
+				user=result.extend.user;
+				initData();
+			}
+		}
+	})
+}
+
+//点击更新用户信息
+$("#btn_update_user").click(function(){
+	//验证邮箱是否合法
+	var email=$("#input_update_email").val();
+	var regEmail= /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+	if(!regEmail.test(email)){
+		showValidateMsg("#input_update_email","error","邮箱格式错误");
+		return false;
+	}else{
+		showValidateMsg("#input_update_email","success","");
+	}
+	
+	//发送请求更新用户
+	$.ajax({
+		url:"${path}/user/"+$(this).attr("userId"),
+		type:"PUT",
+		data:$("#userUpdateModal form").serialize()+"",
+		success:function(result){
+			if(result.code==100){
+				$("#userUpdateModal").modal('hide');
+				getUser(user.userId);
+			}
+		}
+	});
+});
+
+/*
+显示检验信息
+*/
+function showValidateMsg(ele,status,msg){
+	$(ele).parent().removeClass("has-success has-error");
+	$(ele).next("span").text("");
+	if("success"==status){
+		$(ele).parent().addClass("has-success");
+		$(ele).next("span").text(msg);
+	}else if("error"==status){
+		$(ele).parent().addClass("has-error");
+		$(ele).next("span").text(msg);
+	}
+}
+
+/**
+ * 初始化动态列表信息
+ */
+function initDynamicList(){
+	var userHeadiconEle=$("<img></img>").addClass("img-circle")
+		.prop({"style":"width:25px;height:25px","src":"${path}/user/icon/126"});
+	var userNameEle=$("<span></span>").append("&nbsp;123456123456&nbsp;&nbsp;");
+	var userDynamicEle=$("<button></button>").prop({"type":"button","style":"padding:0;margin:0;"})
+						.addClass("btn btn-link")
+						.append(userHeadiconEle)
+						.append(userNameEle);
+	var tipEle=$("<span></span>").prop("style","color:gray;").append("来看你了");
+	var date=new Date();
+	var timeEle=$("<span></span>").prop("style","color:gray;font-size:12px;").append("&nbsp;&nbsp;"+date.getMonth()+"/"+date.getDate());
+	var dynamiContentEle=$("<div></div>")
+			.append(userDynamicEle)
+			.append(tipEle)
+			.append(timeEle);
+	var dynamicLi=$("<li></li>").addClass("list-group-item").append(dynamiContentEle);
+	$("#dynamic_list").append(dynamicLi);
+}
+
+/**
+ * 为textArea设置适配器来进行高度自适应
+ */
+function setTextAreaAdapter(textArea){
+	$(textArea).areaAutoHeight();
+}
+
+//实现textarea高度根据内容自适应
+$.fn.extend({
+  areaAutoHeight: function () {
+        return this.each(function () {
+        var $this = $(this);
+              if (!$this.attr('initAttrH')) {
+                 $this.attr('initAttrH', $this.outerHeight());
+            }
+            setAutoHeight(this).on('input', function () {
+                setAutoHeight(this);
+           });
+        });
+         function setAutoHeight(elem) {
+            var $obj = $(elem);
+            return $obj.css({ height: $obj.attr('initAttrH'), 'overflow-y': 'hidden' }).height(elem.scrollHeight);
+         }
+  }
+ });
+ 
+/**
+ * 日期格式转换
+ */
+function formatDate(time){
+	var date=new Date(time);
+	var year=date.getFullYear();
+	var month=date.getMonth()+1;
+	var day=date.getDate();
+	var hour=date.getHours();
+	var minute=date.getMinutes();
+	return year+"-"+month+"-"+day+" "+decorateTime(hour)+":"+decorateTime(minute);
+}
+
+/**
+ * 分钟和秒钟进行补0
+ */
+function decorateTime(num){
+	if(num<10){
+		num='0'+num;
+	}
+	return num;
+}
+
+
+</script>
+</html>

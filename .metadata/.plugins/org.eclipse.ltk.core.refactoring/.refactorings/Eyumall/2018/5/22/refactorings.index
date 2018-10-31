@@ -1,0 +1,27 @@
+1527661507803	Rename resource 'mmall.properties'
+1527663501216	Delete element
+1527663508607	Delete element
+1527663514442	Delete element
+1527663619003	Delete element
+1527663732392	Delete element
+1527678776254	Extract local variable 'isExist'
+1527679270046	Extract local variable 'user'
+1527679556447	Extract local variable 'response'
+1527679897357	Extract local variable 'response'
+1527681733640	Extract local variable 'user'
+1527682394851	Extract local variable 'question'
+1527683015076	Extract local variable 'checkQuestion'
+1527683054834	Extract local variable 'forgetToken'
+1527737009128	Extract local variable 'pwd'
+1527739173617	Move 'base.jsp' to 'common'
+1527743448435	Extract local variable 'user'
+1527744682437	Extract local variable 'category'
+1527744746541	Extract local variable 'count'
+1527745259977	Extract local variable 'count'
+1527745862594	Extract local variable 'childCategory'
+1527746722026	Rename type 'CategoryService'
+1527746839162	Extract local variable 'category'
+1527746996425	Extract local variable 'categoryList'
+1527747166279	Extract local variable 'categorySet'
+1527747231546	Extract local variable 'categoryList'
+1527749724233	Extract local variable 'resp'

@@ -1,0 +1,4 @@
+1525149704498	Extract local variable 'resp'
+1525177067616	Extract local variable 'weatherServicePort'
+1525177327760	Extract local variable 'client'
+1525177949619	Extract local variable 'resp'

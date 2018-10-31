@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+<!-- 
+	分模块配置的方法
+	<include file="模块.xml"></include>
+ -->
+	
+   <package name="helloWorld" extends="struts-default">
+  	<action name="hello" class="com.rifu.action.HelloWorldAction">
+  		<result name="success">helloWorld.jsp</result>
+  	</action>
+  	
+  	<action name="user" class="com.rifu.action.UserAction">
+  		<result name="success">success.jsp</result>
+  		<result name="error">fail.jsp</result>
+  	</action>
+  	
+  	<action name="user2" class="com.rifu.action.UserAction2">
+  		<result name="success">success.jsp</result>
+  		<result name="error">fail.jsp</result>
+  	</action>
+  	
+  	<action name="hobby" class="com.rifu.action.HobbyAction">
+  		<result name="success">success.jsp</result>
+  	</action>
+  	
+  </package>
+  
+  
+  <package name="foreground" namespace="/fore" extends="struts-default">
+	  <action name="test" class="com.rifu.action.ForeAction">
+  		<result name="success">${pageContext.request.contextPath}/helloWorld.jsp</result>
+  	</action>
+  </package>
+  
+  <package name="background" namespace="/back" extends="struts-default">
+	  <action name="test" class="com.rifu.action.BackAction">
+  		<result name="success">${pageContext.request.contextPath}/helloWorld.jsp</result>
+  	</action>
+  </package>
+
+</struts>

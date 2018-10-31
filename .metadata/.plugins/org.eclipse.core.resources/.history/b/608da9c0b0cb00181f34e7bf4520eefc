@@ -1,0 +1,167 @@
+/**
+ * 
+ */
+package com.rifu.vo;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * @author Lifu
+ * @create 2018年6月18日   下午1:57:56
+ */
+public class ProductDetailVo {
+	private Integer productId;
+
+    private Integer categoryId;
+
+    private String productName;
+
+    private String subtitle;
+
+    private String foreground;
+
+    private BigDecimal price;
+
+    private Integer stock;
+
+    private Integer productStatus;
+
+    private Integer businessId;
+    
+    private String subimages;
+
+    private String detail;
+    
+    private String createTime;
+    
+    private String updateTime;
+    
+    private String imageHost;
+    
+    private Integer parentCategoryId;
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
+	public Integer getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getSubtitle() {
+		return subtitle;
+	}
+
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
+	}
+
+	public String getForeground() {
+		return foreground;
+	}
+
+	public void setForeground(String foreground) {
+		this.foreground = foreground;
+	}
+	
+
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+	public Integer getProductStatus() {
+		return productStatus;
+	}
+
+	public void setProductStatus(Integer productStatus) {
+		this.productStatus = productStatus;
+	}
+
+	public Integer getBusinessId() {
+		return businessId;
+	}
+
+	public void setBusinessId(Integer businessId) {
+		this.businessId = businessId;
+	}
+
+	public String getSubimages() {
+		return subimages;
+	}
+
+	public void setSubimages(String subimages) {
+		this.subimages = subimages;
+	}
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getImageHost() {
+		return imageHost;
+	}
+
+	public void setImageHost(String imageHost) {
+		this.imageHost = imageHost;
+	}
+
+	public Integer getParentCategoryId() {
+		return parentCategoryId;
+	}
+
+	public void setParentCategoryId(Integer parentCategoryId) {
+		this.parentCategoryId = parentCategoryId;
+	}
+    
+    
+}

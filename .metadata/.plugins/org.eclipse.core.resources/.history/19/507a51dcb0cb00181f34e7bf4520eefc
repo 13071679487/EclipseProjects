@@ -1,0 +1,84 @@
+/**
+ * 
+ */
+package com.rifu.vo;
+
+import java.math.BigDecimal;
+
+/**
+ * @author Lifu
+ * @create 2018年7月1日   下午8:44:07
+ */
+public class RecordVo {
+
+	private Integer recordId;
+	private Integer userId;
+	private Integer productId;
+	private String productName;
+	private String productForeground;
+	private String productPrice;
+	
+	private String imageHost;
+	
+
+	public Integer getRecordId() {
+		return recordId;
+	}
+
+	public void setRecordId(Integer recordId) {
+		this.recordId = recordId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getProductForeground() {
+		return productForeground;
+	}
+
+	public void setProductForeground(String productForeground) {
+		this.productForeground = productForeground;
+	}
+
+
+	
+	
+	public String getProductPrice() {
+		return productPrice;
+	}
+
+	public void setProductPrice(String productPrice) {
+		this.productPrice = productPrice;
+	}
+
+	public String getImageHost() {
+		return imageHost;
+	}
+
+	public void setImageHost(String imageHost) {
+		this.imageHost = imageHost;
+	}
+	
+	
+}

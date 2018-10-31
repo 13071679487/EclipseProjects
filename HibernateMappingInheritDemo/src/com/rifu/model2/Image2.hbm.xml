@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rifu.model2">
+
+	<class name="Image2" table="t_image2">
+		<id name="id" column="imageId">
+			<generator class="native"></generator>
+		</id>
+		
+		<discriminator column="imageType" type="string"></discriminator>
+		<property name="imageName" column="imageName" length="40"></property>
+		<!-- 设置级联 -->
+		
+		<many-to-one name="student" column="stuId" class="com.rifu.model2.Student2"></many-to-one>
+		
+		<subclass name="com.rifu.model2.LifeImage2" discriminator-value="li"></subclass>
+		<subclass name="com.rifu.model2.WorkImage2" discriminator-value="wi"></subclass>
+	</class>
+
+</hibernate-mapping>

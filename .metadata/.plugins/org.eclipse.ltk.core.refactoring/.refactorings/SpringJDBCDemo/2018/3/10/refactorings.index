@@ -1,0 +1,5 @@
+1520417531873	Delete element
+1520417873263	Rename type 'StudentServiceImpl'
+1520418096030	Rename type 'StudentDaoImpl'
+1520418425754	Extract local variable 'classPathXmlApplicationContext'
+1520420147245	Extract local variable 'iterator'

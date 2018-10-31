@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rifu.model">
+
+	<class name="Class" table="t_class">
+		<id name="id" column="classId">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="name" column="className"></property>
+		<!-- 在这里设置inverse为true,会把相关数据关联起来  当需要进行级联删除时，cascade设置为delete(但是这种操作很危险) -->
+		<set name="students" cascade="save-update" inverse="true">
+			<key column="classId"></key>
+			<one-to-many class="com.rifu.model.Student"/>
+		</set>
+	</class>
+
+</hibernate-mapping>

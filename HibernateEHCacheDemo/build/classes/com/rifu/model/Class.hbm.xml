@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rifu.model">
+
+	<class name="Class" table="t_class">
+		<!--下面的cache标签配合EHcache（二级缓存）使用，设置为只可读，才可以保存在硬盘  -->
+		<cache usage="read-only"/>
+		<id name="id" column="classId">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="name" column="className"></property>
+	</class>
+
+</hibernate-mapping>

@@ -1,0 +1,135 @@
+/**
+ * 
+ */
+package com.rifu.vo;
+
+import java.math.BigDecimal;
+
+/**
+ * @author Lifu
+ * @create 2018年6月19日   下午3:23:25
+ */
+public class CartProductVo {
+	private Integer id;
+	private Integer productId;
+	private Integer userId;
+	private Integer quantity;
+	private String productName;
+	private String productSubTitle;
+	private String productForeground;
+	private Integer productStatus;
+	private String productUnitPrice;
+	private String productTotalPrice;
+	private Integer productStock;
+	private boolean productChecked;
+	
+	private String limitQuantity;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getProductSubTitle() {
+		return productSubTitle;
+	}
+
+	public void setProductSubTitle(String productSubTitle) {
+		this.productSubTitle = productSubTitle;
+	}
+
+	public String getProductForeground() {
+		return productForeground;
+	}
+
+	public void setProductForeground(String productForeground) {
+		this.productForeground = productForeground;
+	}
+
+	public Integer getProductStatus() {
+		return productStatus;
+	}
+
+	public void setProductStatus(Integer productStatus) {
+		this.productStatus = productStatus;
+	}
+
+	
+
+	public String getProductUnitPrice() {
+		return productUnitPrice;
+	}
+
+	public void setProductUnitPrice(String productUnitPrice) {
+		this.productUnitPrice = productUnitPrice;
+	}
+
+	public String getProductTotalPrice() {
+		return productTotalPrice;
+	}
+
+	public void setProductTotalPrice(String productTotalPrice) {
+		this.productTotalPrice = productTotalPrice;
+	}
+
+	public Integer getProductStock() {
+		return productStock;
+	}
+
+	public void setProductStock(Integer productStock) {
+		this.productStock = productStock;
+	}
+
+	public boolean isProductChecked() {
+		return productChecked;
+	}
+
+	public void setProductChecked(boolean productChecked) {
+		this.productChecked = productChecked;
+	}
+
+	public String getLimitQuantity() {
+		return limitQuantity;
+	}
+
+	public void setLimitQuantity(String limitQuantity) {
+		this.limitQuantity = limitQuantity;
+	}
+	
+	
+}

@@ -1,0 +1,6 @@
+1524924536984	Extract local variable 'fs'
+1524924563782	Extract local variable 'wb'
+1524924595479	Extract local variable 'sheet'
+1524924712513	Extract local variable 'row'
+1524924777270	Extract local variable 'cell'
+1524926210071	Copy compilation unit

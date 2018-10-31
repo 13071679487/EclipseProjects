@@ -1,0 +1,14 @@
+1521457388504	Delete element
+1521457393712	Delete element
+1521460121860	Delete element
+1521460589800	Rename method 'getEMps'
+1521465173571	Delete element
+1521545570262	Extract local variable 'emp'
+1521546365467	Extract local variable 'openSession'
+1521546480479	Extract local variable 'query'
+1521547926479	Extract local variable 'query'
+1521593993925	Extract local variable 'emp'
+1521595212539	Extract local variable 'pageInfo'
+1521610584121	Extract local variable 'tx'
+1521612959731	Extract local variable 'query'
+1521714672880	Delete element

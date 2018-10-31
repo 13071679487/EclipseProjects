@@ -1,0 +1,122 @@
+/**
+ * 
+ */
+package com.rifu.service.impl;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
+import com.rifu.common.ResponseCode;
+import com.rifu.common.ServerResponse;
+import com.rifu.dao.ProductMapper;
+import com.rifu.dao.RecordMapper;
+import com.rifu.pojo.ProductWithBLOBs;
+import com.rifu.pojo.Record;
+import com.rifu.service.IRecordService;
+import com.rifu.util.BigDecimalUtil;
+import com.rifu.util.PropertiesUtil;
+import com.rifu.vo.RecordVo;
+
+/**
+ * @author Lifu
+ * @create 2018年6月30日 下午1:38:43
+ */
+@Service
+public class RecordServiceImpl implements IRecordService {
+
+	@Autowired
+	private RecordMapper recordMapper;
+	
+	@Autowired
+	private ProductMapper productMapper;
+
+	public ServerResponse createRecord(Integer userId, Record record) {
+		if (userId != record.getUserId()) {
+			return ServerResponse.createByError(ResponseCode.NO_AUTHORIZATION.getCode(),
+					ResponseCode.NO_AUTHORIZATION.getDesc());
+		}
+		int count = recordMapper.selectByProductIdAndUserId(userId, record.getProductId());
+		int rowCount = 0;
+		if (count > 0) {
+			rowCount = recordMapper.updateByProductIdAndUserId(userId, record.getProductId());
+		}else{
+			record.setCreateTime(new Date());
+			record.setUpdateTime(new Date());
+			recordMapper.insertSelective(record);
+		}
+		if (rowCount > 0) {
+			return ServerResponse.createBySuccess();
+		}
+		return ServerResponse.createByError();
+	}
+
+	public ServerResponse list(Integer userId, int pageNum) {
+		PageHelper.startPage(pageNum, 8, true);
+		List<Record> recordList = recordMapper.selectByUserId(userId);
+		PageInfo pageInfo = new PageInfo(recordList);
+		List<RecordVo> recordVoList = assembleRecordVo(recordList);
+		pageInfo.setList(recordVoList);
+		return ServerResponse.createBySuccess(pageInfo);
+	}
+
+	public ServerResponse delete(Integer userId, Integer recordId) {
+		Record record = recordMapper.selectByPrimaryKey(recordId);
+		if (record == null) {
+			return ServerResponse.createByErrorWithMessage("no this record");
+		}
+		int rowCount = recordMapper.deleteByPrimaryKeyAndUerId(userId, recordId);
+		if (rowCount > 0) {
+			return ServerResponse.createBySuccess();
+		}
+		return ServerResponse.createByError();
+	}
+
+	public ServerResponse deleteAll(Integer userId) {
+		int count = recordMapper.selectCountByUserId(userId);
+		int rowCount = recordMapper.deleteAllByUserId(userId);
+		if (count == rowCount) {
+			return ServerResponse.createBySuccess();
+		}
+		return ServerResponse.createByError();
+	}
+
+	public ServerResponse count(Integer userId) {
+		int count = recordMapper.selectCountByUserId(userId);
+		return ServerResponse.createBySuccess(count);
+	}
+
+	/**
+	 * 构建记录VO
+	 * @param recordList
+	 * @return
+	 */
+	private List<RecordVo> assembleRecordVo(List<Record> recordList){
+		List<RecordVo> recordVoList=Lists.newArrayList();
+		if(CollectionUtils.isEmpty(recordList)){
+			return recordVoList;
+		}
+		for(Record re:recordList){
+			ProductWithBLOBs product = productMapper.selectByPrimaryKey(re.getProductId());
+			if(product != null){
+				RecordVo vo=new RecordVo();
+				vo.setRecordId(re.getRecordId());
+				vo.setUserId(re.getUserId());
+				vo.setProductId(re.getProductId());
+				vo.setProductName(product.getProductName());
+				vo.setProductForeground(product.getForeground());
+				vo.setProductPrice(BigDecimalUtil.format(product.getPrice()));
+				vo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
+				recordVoList.add(vo);
+			}
+		}
+		return recordVoList;
+	}
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rifu.model2">
+
+	<class name="Course2" table="t_course2">
+		<id name="id" column="courseId">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="courseName" column="courseName" length="40"></property>
+		
+		<!-- 在这里设置inverse为true,代表可以对两张表进行级联控制的是t_student,也就是说删除课程表时，不能删除该课程里面的学生 -->
+		<set name="students" table="student_course2" inverse="true">
+			<key column="course_id"></key>
+			<many-to-many class="com.rifu.model2.Student2" column="student_id"></many-to-many>
+		</set>
+	</class>
+
+</hibernate-mapping>

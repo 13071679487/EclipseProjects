@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.rifu.model">
+
+	<class name="User2" table="t_user2">
+		<id name="id" column="userId">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="userName" column="userName" length="40"></property>
+		<!-- 这里设置级联方式为all就是在save update delete 都会进行同步操作 -->
+		<many-to-one name="address" class="com.rifu.model.Address2" column="addressId" cascade="all" unique="true"></many-to-one>
+	</class>
+
+</hibernate-mapping>

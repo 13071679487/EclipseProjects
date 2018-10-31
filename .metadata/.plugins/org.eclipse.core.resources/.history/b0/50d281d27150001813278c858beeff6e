@@ -1,0 +1,467 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>用户个人动态管理</title>
+<%
+	pageContext.setAttribute("path", request.getContextPath());
+%>
+<script type="text/javascript"
+	src="${path}/bootstrap3/js/jquery-1.11.2.min.js"></script>
+<!-- 引入js文件 -->
+<script src="${path }/bootstrap3/js/bootstrap.min.js"></script>
+<script src="${path }/js/common.js"></script>
+
+<!-- 引入样式 -->
+<link href="${path}/bootstrap3/css/bootstrap.min.css" rel="stylesheet">
+<link href="${path}/css/common-style.css" rel="stylesheet">
+
+</head>
+<body>
+	<div class="container">
+		<div class="row" style="border-left:2px solid green;padding-left:20px;">
+			<div class="col-md-2" style="display:inline-block;">
+				<h5>动态管理</h5>
+			</div>
+			<div class="col-md-2 col-md-offset-8" style="display:inline-block;padding-top:5px;">
+				<a id="btn_publish" class="btn btn-sm btn-info">发表新动态</a>
+			</div>
+		</div>
+		
+		<hr class="sperator-1px-green" style="margin:20px 0px;;">
+		
+		<div id="dynamic_header" class="container-fluid" style="margin-top:10px;">
+				<!-- 这里显示header的一些信息，比如说刷新图标 -->
+				<div id="loadingRow" class="row" style="text-align:center">
+					<span class="glyphicon"></span> <span id="loadingTips">加载中...</span>
+				</div>
+			</div>
+			
+			<div id="dynamic_body" class="container-fluid" style="padding-top:5px;">
+			<!-- 这里是中间内容显示的控件 -->
+			</div>
+			
+			<div id="dynamic_footer" class="container-fluid" style="margin-top:10px;">
+				<!-- 这里显示footer的一些信息，比如说翻页导航 -->
+				<div class="col-md-4" id="page_info">
+			
+				</div>
+				<div class="col-md-6 col-md-offset-1" id="page_nav">
+					
+				</div>
+			</div>
+	</div>
+
+<!-- 用户发表的模态框 -->
+<div class="modal fade" id="publishModal" tabindex="99" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">发表</h4>
+      </div>
+      <div class="modal-body">
+      	<form class="form-horizontal" action="${path}/dynamic" method="POST" enctype="multipart/form-data" >
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label" style="text-align:right;">标题</label>
+		    <div class="col-sm-6">
+		      <input type="text" name="dynamicTitle"class="form-control" id="input_title" placeHolder="Please input name">
+		      <span class="help-block"></span>
+		    </div>
+		  </div>
+		  
+		  <!-- Description -->
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label" style="text-align:right;">正文</label>
+		    <div class="col-sm-10">
+		      <textarea name="dynamicContent"  id="input_content" class="form-control" style="min-height: 90px;" placeHolder="Please input description"></textarea>
+		      <span class="help-block"></span>
+		    </div>
+		  </div>
+		  
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label" style="text-align:right;">图片</label>
+		    <div class="col-sm-10 container-fluid">
+		    	<div><span id="choosePhotoTips"></span></div>
+		    	<div class="row" id="photos">
+		    	<!-- 
+			    	<div class="photoContainer">
+			    		<span  class="btn photoItemDelete glyphicon glyphicon-minus"></span>
+			    		<img alt="" class="photoItem-sm" src="${path }/user/icon/164"/>
+			    	</div>
+		    	 -->
+			    	
+			    	<div class="photoContainer">
+			    		<span  class="btn photoItemAdd glyphicon glyphicon-plus"></span>
+			    	</div>
+			    	
+		    	</div>
+			      <input type="hidden" name="dynamicAuthorid" value="${currentUser.userId }">
+		    	<div  class="form-group" id="fileContainer">
+			      <input type="file" name="photo" class="form-control" accept="image/gif, image/jpeg, image/png" style="display:none;">
+				</div>
+		    </div>
+		  </div>
+		  <div class="form-group" style="margin-top:10px;">
+		    <label class="col-sm-2 control-label" style="text-align:right;">对谁可见</label>
+		    <div class="col-sm-3">
+		    	<!-- 提交角色id即可 -->
+		      <select class="form-control" style="height:25px;padding:0 6px;" name="dynamicType" id="dynamicType_select">
+		      	<option value="1">仅自己可见</option>
+		      	<option value="2">好友可见</option>
+		      	<option value="3">附近可见</option>
+		      	<option value="4">所有人可见</option>
+		      </select>
+		    </div>
+		  </div>
+		  
+		  <div class="form-group" style="text-align:center;">
+		  	<div class="col-md-4 col-md-offset-4">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		        <input type="submit" class="btn btn-primary" id="btn_save_publish" value="提交"/>
+			  </div>
+		  </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script type="text/javascript">
+$(function(){
+	loadMyDynamic(1);
+})
+/**
+ * 加载我的发布
+ */
+function loadMyDynamic(pagenum){
+	showLoadingRow();
+	$("#dynamic_body").empty();
+	$.ajax({
+		url:"${path}/dynamics/${currentUser.userId }",
+		type:"POST",
+		data:{"pn":pagenum,"size":8},
+		success:function(result){
+			if(result.code==100){
+				hideLoadingRow();
+				var list=result.extend.pageInfo.list;
+				buildPublishInfo(list);
+				buildPagenav(result);
+			}
+		},
+		error:function(){
+			showLoadingFail("加载出现了点问题，请稍后重试...");
+			console.log("请求数据失败"+new Date());
+		},
+		complete:function(req,status){
+			if(status=='timeout'){
+				showLoadingFail("加载超时...");
+			}
+		}
+	});
+}
+
+function buildPublishInfo(list){
+	$.each(list,function(index,item){
+		var hrEle=$("<hr>").prop({"style":"border:1px solid #ccc;border-radius:5px;"});
+		
+		var userHeadiconEle=$("<img></img>").addClass("img-circle").prop({"style":"height:35px;width:35px;","src":"${path}/user/icon/"+item.dynamicAuthorid});
+		var userNameEle=$("<span></span>").prop({"style":"color:gray;font-size:16px;margin-left:3px;"})
+							.append(item.author.userName);
+		var userHrefEle=$("<a></a>").prop({"href":"${path}/dispatcher/personal/"+item.dynamicAuthorid})
+							.addClass("btn btn-link")
+							.append(userHeadiconEle)
+							.append(userNameEle);
+		var createTimeEle=$("<span></span>").prop({"style":"color:gray;font-size:12px;margin-left:10px;"})
+							.append(formatDate(item.dynamicCreatetime));
+		
+		/* <div class="dropdown">
+		  <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    Dropdown trigger
+		    <span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu" aria-labelledby="dLabel">
+		    ...
+		  </ul>
+		</div> */
+		
+		var operateEle=$("<div></div>").attr({"authorId":item.dynamicAuthorid,"style":"float: right !important;margin-right: 10px;"})
+						.addClass("dropdown");
+		var btnSwitchEle=$("<span></span>").attr({"id":"dLabel","data-toggle":"dropdown","aria-haspopup":"true","aria-expanded":"false"})
+							.addClass("btn glyphicon glyphicon-option-horizontal");
+		var operateMenuUlEle=$("<ul></ul>").attr("aria-labelledby","dLabel")
+							.addClass("dropdown-menu");
+		var deleteOpEle=$("<li></li>")
+		var userInfoRow=$("<div></div>").addClass("row")
+							.append(userHrefEle)
+							.append(createTimeEle)
+							.append(operateEle);
+		
+		var titleEle=$("<h4></h4>").append(item.dynamicTitle);
+		var titleRow=$("<div></div>").prop({"style":"margin-left:10px;margin-top:5px;"})
+						.addClass("row")
+						.append(titleEle);
+		var contentEle=$("<p></p>").append(item.dynamicContent);
+		var contentRow=$("<div></div>").prop({"style":"margin-left:10px;"})
+						.addClass("row")
+						.append(contentEle);
+		
+		var photoRow=$("<div></div>").prop({"style":"padding:0 40px;"})
+						.addClass("row");
+						
+		if(item.photos!=null&&item.photos!=''){
+			console.log(item.photos);
+			$.each(item.photos,function(i,photo){
+				var photoEle=$("<img></img>").prop({"src":"${path}/dynamicPhoto/"+photo.photoId}).addClass("photoItem");
+				photoRow.append(photoEle);
+			});
+		}
+		var hrSperatorEle=$("<hr></hr>").prop({"style":"border:none;border-top:1px dotted #ccc;"});
+		
+		var discussEle=$("<a></a>").attr("role","button")
+			.attr({"dynamicId":item.dynamicId,"authorId":item.dynamicAuthroid,"dynamicRowIndex":$(".dynamicRow").length,"style":"color:gray;float: right !important;margin-right: 10px;"})
+			.addClass("btn btn-xs btn_discuss")
+			//.append($("<img></img>").addClass("icon").prop({"src":"https://cdn-img.easyicon.net/png/11982/1198247.gif"}))
+			.append($("<span></span>").addClass("glyphicon glyphicon-edit"))
+			.append("&nbsp;评论");
+		
+		var toolRow=$("<div></div>").prop({}).addClass("row")
+				.append(discussEle);
+		
+		var containerEle=$("<div></div>").addClass("container-fluid")
+							.append(userInfoRow)
+							.append(titleRow)
+							.append(contentRow)
+							.append(photoRow)
+							.append(hrSperatorEle)
+							.append(toolRow);
+		
+		getDiscussList(containerEle,item.dynamicId,1,3);
+		
+		var rowEle=$("<div></div>").addClass("row")
+					.append(containerEle)
+					.append(hrEle);
+		$("#dynamic_body").append(rowEle);
+	})
+	myPublishList=$("#dynamic_body").html();
+}
+
+/**
+ * 发送ajax请求，根据dynamicId获取回复评论列表
+ */
+function getDiscussList(container,dynamicId,page,size){
+	$.ajax({
+		url:"${path}/discusses/"+dynamicId,
+		type:"POST",
+		data:{"pn":page,"size":size},
+		success:function(result){
+			if(result.code==100){
+				var list=result.extend.pageInfo.list;
+				buildDiscussListList(container,list);
+			}
+			
+		}
+	})
+}
+
+/**
+ * 根据请求获取到的数据进行回复列表的构建
+ <div class="media">
+ <div class="media-left btn btn-link">
+    <img class="headicon-sm" src="${path }/user/icon/126" alt="">
+ </div>
+ <div class="media-body">
+   <span  class="media-heading name-sm">Media heading</span>
+   123123456132123
+ </div>
+</div>
+ */
+function buildDiscussListList(container,list){
+	 $.each(list,function(index,item){
+		var speratorHrEle=$("<hr></hr>").prop({"style":"margin:0 10px;"})
+		var headiconEle=$("<img></img>").addClass("headicon-sm")
+						.prop({"src":"${path }/user/icon/"+item.discussFromid});
+		var mediaLeftEle=$("<div></div>").addClass("media-left btn btn-link")
+							.append(headiconEle);
+		var userNameEle=$("<span></span>").addClass("media-heading name-sm")
+						.append(item.discussFromUser.userName);
+		var mediaBodyEle=$("<div></div>").addClass("media-body")
+							.append(userNameEle)
+							.append(item.discussContent);
+		var mediaEle=$("<div></div>").addClass("media")
+					.append(mediaLeftEle)
+					.append(mediaBodyEle);
+		$(container).append(speratorHrEle)
+					.append(mediaEle);
+	 })
+}
+//解析显示分页条
+ function buildPagenav(result){
+ 	$("#page_nav").empty();
+ 	var ul=$("<ul></ul>").addClass("pagination");
+ 	//首页
+ 	var firstPage=$("<li></li>").append($("<a></a>").append("First").attr("href","#"));
+ 	//前一页
+ 	var previousPage=$("<li></li>").append($("<a></a>").append("&laquo;").attr("href","#"));
+ 	if(result.extend.pageInfo.hasPreviousPage==false){
+ 		firstPage.addClass("disabled");
+ 		previousPage.addClass("disabled");
+ 	}else{
+ 		firstPage.click(function(){
+ 			loadMyDynamic(1);
+ 		});
+ 		previousPage.click(function(){
+ 			loadMyDynamic(result.extend.pageInfo.pageNum-1);
+ 		}); 
+ 	}
+ 	//后一页
+ 	var nextPage=$("<li></li>").append($("<a></a>").append("&raquo;").attr("href","#"));
+ 	//尾页
+ 	var lastPage=$("<li></li>").append($("<a></a>").append("Last").attr("href","#"));
+ 	if(result.extend.pageInfo.hasNextPage==false){
+ 		nextPage.addClass("disabled");
+ 		lastPage.addClass("disabled");
+ 	}else{
+ 		nextPage.click(function(){
+ 			loadMyDynamic(result.extend.pageInfo.pageNum+1);
+ 		});
+ 		lastPage.click(function(){
+ 			loadMyDynamic(result.extend.pageInfo.pages)
+ 		});
+ 	}
+ 	ul.append(firstPage).append(previousPage);
+ 	$.each(result.extend.pageInfo.navigatepageNums,function(index,item){
+ 		var numLi=$("<li></li>").append($("<a></a>").append(item));
+ 		if(result.extend.pageInfo.pageNum==item){
+ 			numLi.addClass("active");
+ 		}
+ 		numLi.click(function(){
+ 			loadMyDynamic(item);
+ 		});
+ 		ul.append(numLi);
+ 	});
+ 	
+ 	ul.append(nextPage);
+ 	ul.append(lastPage);
+ 	
+ 	var navEle=$("<nav></nav>").append(ul);
+ 	navEle.appendTo($("#page_nav"));
+ }
+ /**
+  * 显示和隐藏加载的div
+  */
+ function showLoadingRow(){
+ 	 $("#loadingRow").children(".glyphicon").addClass("rotate-360-forever glyphicon-repeat").removeClass("glyphicon-remove-sign");
+ 	$("#loadingRow").children("span:eq(1)").text("加载中...");
+ 	$("#loadingRow").slideDown('slow');
+ }
+ function showLoadingFail(msg){
+ 	$("#loadingRow").children(".glyphicon").removeClass("rotate-360-forever glyphicon-repeat").addClass("glyphicon-remove-sign");
+ 	$("#loadingRow").children("span:eq(1)").text(msg);
+ }
+ function hideLoadingRow(){
+ 	window.setTimeout(function(){
+ 		$("#loadingRow").slideUp('slow');
+ 	},800);
+ }
+ 
+ $("#btn_save_publish").on("click",function(){
+		console.log("click the btn_save_publish");
+		$("#fileContainer input").last().remove();
+		var title=$("#input_title").val();
+		var content=$("#input_content").val();
+		if(isEmpty(title)){
+			showTips("提示信息","标题不能为空！！！",1500)
+			$("#publishModal form").prop("onsubmit",false);
+		}else{
+			$("#publishModal form").prop("onsubmit",true);
+		}
+		if(isEmpty(content)){
+			showTips("提示信息","内容不能为空！！！",1500)
+			$("#publishModal form").prop("onsubmit",false);
+		}else{
+			$("#publishModal form").prop("onsubmit",true);
+		}
+		
+	})
+	
+$(document).on("click","#btn_publish",function(){
+	console.log("click the btn_publish..");
+	$("#input_title").val('');
+	$("#input_content").val('');
+	$("#publishModal").modal();
+	setTextAreaAdapter($("#input_content"));
+})
+/**
+ * 为textArea设置适配器来进行高度自适应
+ */
+function setTextAreaAdapter(textArea){
+	$(textArea).areaAutoHeight();
+}
+ 
+//实现textarea高度根据内容自适应
+ $.fn.extend({
+   areaAutoHeight: function () {
+         return this.each(function () {
+         var $this = $(this);
+               if (!$this.attr('initAttrH')) {
+                  $this.attr('initAttrH', $this.outerHeight());
+             }
+             setAutoHeight(this).on('input', function () {
+                 setAutoHeight(this);
+            });
+         });
+          function setAutoHeight(elem) {
+             var $obj = $(elem);
+             return $obj.css({ height: $obj.attr('initAttrH'), 'overflow-y': 'hidden' }).height(elem.scrollHeight);
+          }
+   }
+  });
+  
+$(document).on("click",".photoItemAdd",function(){
+	var photoLength=$(".photoItem-sm").length;
+	if(photoLength<6){
+		$("#fileContainer input").last().click();
+	}else{
+		$("#choosePhotoTips").prop({"style":"color:#FF6347"}).text("最多选择六张");
+	}
+})
+
+$(document).on("click",".photoItemDelete",function(){
+	var index=$(this).attr("index");
+	console.log("要删除的index是："+index);
+	$.each($("#fileContainer input"),function(i,item){
+		if(i==index){
+			$(item).remove();
+		}
+	})
+	$(this).parent().remove();
+	$("#choosePhotoTips").text("");
+})
+/**
+ * 选择了文件进行预览
+ */
+$(document).on("change","#fileContainer input",function(){
+	console.log("choose file...");
+	if(this.files&&this.files[0]){
+		var reader =new FileReader();
+		reader.onload=function(evt){
+			//进行预览
+			var imgEle=$("<img></img>").addClass("photoItem-sm").prop({"src":evt.target.result});
+			var deleteEle=$("<span></span>").addClass("btn photoItemDelete glyphicon glyphicon-minus").attr({"index":$(".photoItemDelete").length});
+			var photoContainerEle=$("<div></div>").addClass("photoContainer")
+									.append(imgEle)
+									.append(deleteEle);
+			$(photoContainerEle).insertBefore($(".photoContainer").last());
+			//添加新的文件填充器 <input type="file" name="photo" style="display:none;">
+			var fileEle=$("<input></input>").prop({"accept":"image/gif, image/jpeg, image/png","type":"file","name":"photo","style":"display:none;"});
+			$("#fileContainer").append(fileEle);
+		}
+		reader.readAsDataURL(this.files[0]);
+	}
+})
+
+</script>
+</html>

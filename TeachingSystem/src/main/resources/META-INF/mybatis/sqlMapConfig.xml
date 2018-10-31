@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+     
+    <!-- <typeAliases>
+        <typeAlias alias="User" type="com.mvc.app.model.User"/>
+    </typeAliases> -->
+
+	<!-- <typeAliases>
+        <package name="com.mvc.app.model" />
+	</typeAliases> -->
+
+	<settings>
+		<setting name="logImpl" value="STDOUT_LOGGING"/>
+	</settings>
+	<!-- 分页插件 -->
+     <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!-- 分页参数合理化-->
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
+	<!-- 拦截器当前只 支持使用数据库oracle、mysql，数据库通过dbType来区分 -->
+    <!-- <plugins>
+	   <plugin interceptor="com.mvc.base.interceptor.PrepareInterceptor">
+	   		<property name="dbType" value="mysql"/>
+	   		<property name="pageKey" value="ByPage"/>
+	   		<property name="pageParam" value="page"/>
+	   </plugin>
+       <plugin interceptor="com.mvc.base.interceptor.QueryInterceptor">
+           <property name="dbType" value="mysql"/>
+           <property name="pageKey" value="ByPage"/>
+           <property name="pageParam" value="page"/>
+       </plugin>   
+    </plugins> -->
+
+    <!-- 与spring 集成之后,这些可以完全删除,数据库连接的管理交给 spring去管理 -->
+    <!-- 
+	<environments default="development">
+		<environment id="development">
+		<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+			<property name="driver" value="com.mysql.jdbc.Driver"/>
+			<property name="url" value="jdbc:mysql://127.0.0.1:3306/mybatis?characterEncoding=utf8" />
+			<property name="username" value="root"/>
+			<property name="password" value="root"/>
+			</dataSource>
+		</environment>
+	</environments>
+	-->
+	<!-- 这里交给sqlSessionFactory 的 mapperLocations属性去得到所有配置信息 -->
+    <!-- 	 
+	<mappers>
+	    <mapper resource="com/mapper/User.xml"/>
+	</mappers>
+	 -->
+</configuration>

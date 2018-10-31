@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mvc.app.dao.IStudentDao">
+   <resultMap id="StudentMap" type="com.mvc.app.model.Student">
+      <id column="stuid" property="stuid"/>
+      <result column="sname" property="sname"/>
+      <result column="sex" property="sex"/>
+      <result column="birth" property="birth"/>
+      <result column="address" property="address"/>
+      <result column="politics" property="politics"/> 
+      <result column="accommodation" property="accommodation"/>
+      <result column="phone" property="phone"/>
+      <result column="scolid" property="scolid"/>   
+   </resultMap>
+    <sql id="comColumns">stuid,sname,sex,birth,address,politics,accommodation,phone,scolid</sql>
+    
+    <select id="findAll" resultMap="StudentMap">
+        select * from student
+    </select>
+    
+     <select id="findById" resultMap="StudentMap">
+         select * from student where stuid=#{stuid}
+     </select>
+     
+     <select id="findByName" resultMap="StudentMap">
+         select * from student where sname=#{sname}
+     </select> 
+     
+      <update id="update">
+        <if test="student!=null">
+		    update student
+		    <set>
+	            stuid=#{student.stuid},
+	            sname=#{student.sname},
+	            sex=#{student.sex},
+	            birth=#{student.birth},
+	            address=#{student.address},
+	            politics=#{student.politics},
+	            accommodation=#{student.accommodation},
+	            phone=#{student.phone},
+	            scolid=#{student.scolid},
+		    </set>
+		    where stuid=#{student.stuid}		
+	    </if>
+    </update>
+    
+    <delete id="deleteById">
+        delete from student where stuid=#{stuid}
+    </delete>
+</mapper>

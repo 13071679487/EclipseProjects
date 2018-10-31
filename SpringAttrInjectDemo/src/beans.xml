@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 这里的声明相当于new了一个对象，且该对象默认是单例模式 -->
+	<bean id="user" class="com.rifu.model.User"></bean>
+
+	<bean id="user1" class="com.rifu.model.User">
+	<!-- 属性注入 -->
+		<property name="id" value="1"></property>
+		<property name="name" value="rifu"></property>
+		<property name="age" value="22"></property>
+	</bean>
+	
+	<bean id="user2" class="com.rifu.model.User">
+		<constructor-arg type="int" value="1"></constructor-arg>
+		<constructor-arg type="String" value="rifu"></constructor-arg>
+		<constructor-arg type="int" value="22"></constructor-arg>
+	</bean>
+	
+	<bean id="user3" class="com.rifu.model.User">
+		<constructor-arg index="0" value="1"></constructor-arg>
+		<constructor-arg index="1" value="rifu"></constructor-arg>
+		<constructor-arg index="2" value="22"></constructor-arg>
+	</bean>
+	
+	<bean id="user4" class="com.rifu.model.User">
+		<constructor-arg index="0" type="int" value="1"></constructor-arg>
+		<constructor-arg index="1"  type="String" value="rifu"></constructor-arg>
+		<constructor-arg index="2" type="int" value="22"></constructor-arg>
+	</bean>
+	
+	<bean id="userFactory" class="com.rifu.factory.UserFactory"></bean>
+	<bean id="user5" factory-bean="userFactory" factory-method="createUser"></bean>
+	
+	<bean id="user6" class="com.rifu.factory.UserFactory2" factory-method="createUser"/>
+  
+</beans>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<script type="text/javascript" src="../js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){	//在整个页面加载完成之后执行
+	$("#btn").click(function(){
+		alert($("#in").val());
+	});
+});
+</script>
+<body>
+<input type="text" id="in"/>&nbsp;&nbsp;<input type="button" id="btn" value="获取文本信息" />
+</body>
+</html>

@@ -1,0 +1,7 @@
+1522217330599	Rename type 'TestRealm'
+1522219385231	Extract local variable 'currentUser'
+1522219436036	Extract local variable 'token'
+1522219554064	Move compilation unit
+1522219782984	Rename package 'com.rifu.action'
+1522219794843	Rename type 'ShiroAction'
+1522220174155	Extract local variable 'upToken'
